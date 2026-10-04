@@ -1,11 +1,12 @@
-# Fouad Barkaoui — extended portfolio
+# Fouad Barkaoui — portfolio
 
-The standalone, extended version of the "Meet the Founder" page in Kanz: case
-studies for each project, the security learning path, the stack in context and
-every way to reach Fouad. English and Arabic (full right-to-left), dark by
-default with a light theme.
+**Live:** https://fouad-barkaoui.vercel.app
 
-Built from `extended-portfolio-prompt.md` (the build brief in this folder).
+SOC analyst & fullstack developer from Morocco. Case studies for Kanz (live
+product), Resume Studio (offline AI resume optimizer) and ASSAS (codebase
+security scanner), the security learning path, the stack in context and every
+way to reach me. English and Arabic (full right-to-left), dark by default with
+a light theme.
 
 ## Stack
 
@@ -33,7 +34,7 @@ npm run preview   # serve dist/
 | Sections | `src/components/` (Hero, About, Projects, SecurityCorner, Stack, Closing) |
 | Styles and theme tokens | `src/styles/index.css` |
 | Portrait | `src/assets/portrait/fouad.avif` |
-| Real Kanz screenshots | `src/assets/kanz/` |
+| Screenshots (Kanz, Resume Studio, ASSAS) | `src/assets/kanz/`, `src/assets/studio/`, `src/assets/assas/` |
 | Official "Built with" logos (drop-in) | `src/assets/logos/` — see the README there |
 | Social preview image | generated at build by `scripts/og.mjs` → `public/og-image.jpg` |
 | Security headers (CSP, HSTS, …) | `vercel.json` |
