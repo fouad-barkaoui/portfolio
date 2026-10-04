@@ -1,0 +1,9 @@
+node_modules
+dist
+.vercel
+*.log
+.DS_Store
+dist-ssr
+public/og-image.jpg
+public/apple-touch-icon.png
+extended-portfolio-prompt.md

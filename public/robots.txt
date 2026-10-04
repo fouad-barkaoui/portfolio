@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://fouad-barkaoui.vercel.app/sitemap.xml
