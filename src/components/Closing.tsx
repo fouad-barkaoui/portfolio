@@ -1,9 +1,11 @@
-import { ArrowUp, ArrowUpRight, FileText, Mail } from 'lucide-react';
+import { ArrowUp, ArrowUpRight, FilePenLine, FileText, Mail } from 'lucide-react';
 import { identity, motto, projects, socials, soon, ui, type Social } from '@/content/content';
 import { useLang } from '@/lib/i18n';
 import { useMagnetic } from '@/lib/motion';
 import { scrollToId } from '@/lib/scroll';
 import { useNow } from '@/lib/time';
+import { briefUi } from '@/content/brief';
+import { openBrief } from '@/lib/brief';
 import { BrandIcon, isBrand } from './BrandIcons';
 import { Logo } from './Logo';
 import { SignalField } from './SignalField';
@@ -166,6 +168,23 @@ function HireCard(): JSX.Element {
   );
 }
 
+/** Invitation to the project brief, for clients rather than recruiters. */
+function BriefCta(): JSX.Element {
+  const { t } = useLang();
+  return (
+    <button type="button" className="brief-cta" onClick={openBrief}>
+      <span className="brief-cta-icon" aria-hidden>
+        <FilePenLine size={20} strokeWidth={1.9} />
+      </span>
+      <span className="brief-cta-text">
+        <b>{t(briefUi.cta)}</b>
+        <span>{t(briefUi.ctaHint)}</span>
+      </span>
+      <ArrowUpRight className="flip-rtl" size={18} strokeWidth={2} aria-hidden />
+    </button>
+  );
+}
+
 export function Contact(): JSX.Element {
   const { t } = useLang();
   const cta = useMagnetic<HTMLAnchorElement>();
@@ -179,6 +198,7 @@ export function Contact(): JSX.Element {
             <Mail size={17} strokeWidth={1.9} aria-hidden />
             {t(ui.writeToMe)}
           </a>
+          <BriefCta />
           <HireCard />
         </div>
         <div className="contact-socials">
@@ -288,6 +308,19 @@ export function Footer(): JSX.Element {
               <li>
                 <a className="footer-link" href={`mailto:${identity.email}`}>
                   {t(ui.footer.email)}
+                  <ArrowUpRight className="flip-rtl" size={15} strokeWidth={2} aria-hidden />
+                </a>
+              </li>
+              <li>
+                <a
+                  className="footer-link"
+                  href="#brief"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    openBrief();
+                  }}
+                >
+                  {t(briefUi.menu)}
                   <ArrowUpRight className="flip-rtl" size={15} strokeWidth={2} aria-hidden />
                 </a>
               </li>

@@ -1,6 +1,8 @@
-import { Menu, Moon, Sun, X } from 'lucide-react';
+import { Menu, Moon, Sun, X, FilePenLine } from 'lucide-react';
 import { useEffect, useState, type MouseEvent } from 'react';
+import { briefUi } from '@/content/brief';
 import { ui } from '@/content/content';
+import { openBrief } from '@/lib/brief';
 import { useLang } from '@/lib/i18n';
 import { useTheme } from '@/lib/theme';
 import { scrollToId } from '@/lib/scroll';
@@ -58,10 +60,34 @@ export function Header(): JSX.Element {
                 </a>
               </li>
             ))}
+            <li className="nav-brief">
+              <a
+                href="#brief"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setOpen(false);
+                  openBrief();
+                }}
+              >
+                <FilePenLine size={17} strokeWidth={1.9} aria-hidden />
+                {t(briefUi.menu)}
+              </a>
+            </li>
           </ul>
         </nav>
 
         <div className="header-tools">
+          <a
+            href="#brief"
+            className="brief-btn"
+            onClick={(e) => {
+              e.preventDefault();
+              openBrief();
+            }}
+          >
+            <FilePenLine size={15} strokeWidth={2} aria-hidden />
+            {t(briefUi.menu)}
+          </a>
           <button type="button" className="lang-btn" onClick={toggleLang} title={t(ui.langSwitchAria)}>
             <span lang={lang === 'en' ? 'ar' : 'en'}>{t(ui.langSwitch)}</span>
             <span className="sr-only"> — {t(ui.langSwitchAria)}</span>

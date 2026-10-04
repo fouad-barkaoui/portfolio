@@ -1,5 +1,5 @@
-import { ArrowUpRight, Check, Maximize2, ShieldCheck } from 'lucide-react';
-import { useState } from 'react';
+import { ArrowLeft, ArrowRight, ArrowUpRight, Check, Maximize2, ShieldCheck } from 'lucide-react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import arabicRtl from '@/assets/kanz/arabic-rtl.avif?w=600;1000;1600&format=avif;webp&as=picture';
 import newsDark from '@/assets/kanz/news-dark.avif?w=800;1400;2400&format=avif;webp&as=picture';
 import salaryLight from '@/assets/kanz/salary-light.avif?w=600;1000;1600&format=avif;webp&as=picture';
@@ -70,7 +70,7 @@ function tagText(tag: string, t: (s: L) => string): string {
   return label ? t(label) : tag;
 }
 
-function CaseStudy({ p, index }: { p: Project; index: number }): JSX.Element {
+function CaseStudy({ p, index, onNext }: { p: Project; index: number; onNext: () => void }): JSX.Element {
   const { t, lang } = useLang();
   const now = useNow(3_600_000);
   const concept = p.status === 'dev';
@@ -215,18 +215,196 @@ function CaseStudy({ p, index }: { p: Project; index: number }): JSX.Element {
           ) : null}
         </section>
       </div>
+      <NextCase index={index} onNext={onNext} />
     </article>
   );
 }
 
+/** End-of-slide link to the next case study (wraps to the first). */
+function NextCase({ index, onNext }: { index: number; onNext: () => void }): JSX.Element {
+  const { t } = useLang();
+  const next = projects[(index + 1) % projects.length]!;
+  return (
+    <button type="button" className="case-next" onClick={onNext}>
+      <span className="case-next-label mono">{t(ui.project.nextProject)}</span>
+      <span className="case-next-name">{next.name}</span>
+      <ArrowRight className="flip-rtl" size={20} strokeWidth={2} aria-hidden />
+    </button>
+  );
+}
+
+/**
+ * The case studies as a swipeable carousel: native scroll-snap does the
+ * swiping (touch, trackpad, shift+wheel), tabs and arrows drive it too, and
+ * the track takes the height of the slide on screen so short slides don't
+ * leave a gap. Slides off screen are inert, so focus never lands in them.
+ */
 export function Projects(): JSX.Element {
+  const { t, lang } = useLang();
+  const track = useRef<HTMLDivElement>(null);
+  const bar = useRef<HTMLDivElement>(null);
+  const slides = useRef<(HTMLElement | null)[]>([]);
+  const [active, setActive] = useState(0);
+  const [height, setHeight] = useState<number | undefined>(undefined);
+  const frame = useRef(0);
+
+  const show = useCallback((i: number, smooth = true) => {
+    const tr = track.current;
+    const el = slides.current[i];
+    if (!tr || !el) return;
+    const delta = el.getBoundingClientRect().left - tr.getBoundingClientRect().left;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    tr.scrollBy({ left: delta, behavior: smooth && !reduce ? 'smooth' : 'auto' });
+    setActive(i);
+  }, []);
+
+  // Which slide is on screen, from the track's scroll position.
+  useEffect(() => {
+    const tr = track.current;
+    if (!tr) return;
+    const onScroll = (): void => {
+      cancelAnimationFrame(frame.current);
+      frame.current = requestAnimationFrame(() => {
+        const left = tr.getBoundingClientRect().left;
+        let best = 0;
+        let dist = Infinity;
+        slides.current.forEach((el, i) => {
+          if (!el) return;
+          const d = Math.abs(el.getBoundingClientRect().left - left);
+          if (d < dist) {
+            dist = d;
+            best = i;
+          }
+        });
+        setActive(best);
+      });
+    };
+    tr.addEventListener('scroll', onScroll, { passive: true });
+    return () => {
+      tr.removeEventListener('scroll', onScroll);
+      cancelAnimationFrame(frame.current);
+    };
+  }, []);
+
+  // Track height follows the visible slide; the others are inert.
+  useEffect(() => {
+    const el = slides.current[active];
+    slides.current.forEach((s, i) => {
+      if (s) s.inert = i !== active;
+    });
+    if (!el || typeof ResizeObserver === 'undefined') return;
+    const ro = new ResizeObserver(() => setHeight(el.offsetHeight));
+    ro.observe(el);
+    setHeight(el.offsetHeight);
+    return () => ro.disconnect();
+  }, [active]);
+
+  // Keep the slide in place when the layout direction or width changes.
+  useEffect(() => {
+    const onResize = (): void => show(active, false);
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, [active, show]);
+  useEffect(() => {
+    show(active, false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lang]);
+
+  // Links elsewhere on the page (index, recruiter card) ask for a case by id.
+  useEffect(() => {
+    const onCase = (e: Event): void => {
+      const id = (e as CustomEvent<string>).detail;
+      const i = projects.findIndex((p) => `case-${p.id}` === id);
+      if (i >= 0) show(i, false);
+    };
+    window.addEventListener('fb:case', onCase);
+    return () => window.removeEventListener('fb:case', onCase);
+  }, [show]);
+
+  const goTo = (i: number, toTop = false): void => {
+    const n = (i + projects.length) % projects.length;
+    show(n);
+    if (toTop && bar.current && bar.current.getBoundingClientRect().top < 0) {
+      bar.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
+  const onTabsKey = (e: React.KeyboardEvent): void => {
+    const fwd = lang === 'ar' ? 'ArrowLeft' : 'ArrowRight';
+    const back = lang === 'ar' ? 'ArrowRight' : 'ArrowLeft';
+    let n = -1;
+    if (e.key === fwd) n = (active + 1) % projects.length;
+    else if (e.key === back) n = (active - 1 + projects.length) % projects.length;
+    else if (e.key === 'Home') n = 0;
+    else if (e.key === 'End') n = projects.length - 1;
+    if (n < 0) return;
+    e.preventDefault();
+    goTo(n);
+    document.getElementById(`case-tab-${projects[n]!.id}`)?.focus();
+  };
+
   return (
     <section id="work" className="section" aria-labelledby="work-title">
       <SectionHead id="work-title" note={ui.notes.building} title={ui.section.projects} count={projects.length} />
-      <div className="cases">
-        {projects.map((p, i) => (
-          <CaseStudy key={p.id} p={p} index={i} />
-        ))}
+      <div className="carousel" aria-roledescription={t(ui.project.carousel)}>
+        <div ref={bar} className="carousel-bar">
+          <div className="carousel-tabs" role="tablist" aria-label={t(ui.section.projects)} onKeyDown={onTabsKey}>
+            {projects.map((p, i) => (
+              <button
+                key={p.id}
+                id={`case-tab-${p.id}`}
+                type="button"
+                role="tab"
+                aria-selected={i === active}
+                aria-controls={`case-slide-${p.id}`}
+                tabIndex={i === active ? 0 : -1}
+                className="carousel-tab"
+                onClick={() => goTo(i)}
+              >
+                <span className="mono" aria-hidden>
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+                {p.name}
+                <i className="carousel-tab-dot" data-tone={p.status === 'dev' ? 'dev' : 'live'} aria-hidden />
+              </button>
+            ))}
+          </div>
+          <div className="carousel-nav">
+            <span className="carousel-count mono" dir="ltr" aria-hidden>
+              <b>{String(active + 1).padStart(2, '0')}</b> / {String(projects.length).padStart(2, '0')}
+            </span>
+            <button type="button" className="icon-btn carousel-arrow" onClick={() => goTo(active - 1)} aria-label={t(ui.project.prevProject)}>
+              <ArrowLeft className="flip-rtl" size={17} strokeWidth={2} aria-hidden />
+            </button>
+            <button type="button" className="icon-btn carousel-arrow" onClick={() => goTo(active + 1)} aria-label={t(ui.project.nextProjectAria)}>
+              <ArrowRight className="flip-rtl" size={17} strokeWidth={2} aria-hidden />
+            </button>
+          </div>
+          <span className="carousel-progress" aria-hidden>
+            <i style={{ width: `${((active + 1) / projects.length) * 100}%` }} />
+          </span>
+        </div>
+        <p className="carousel-hint mono" aria-hidden>
+          {t(ui.project.swipe)}
+        </p>
+        <div ref={track} className="carousel-track" style={height ? { height } : undefined}>
+          {projects.map((p, i) => (
+            <div
+              key={p.id}
+              id={`case-slide-${p.id}`}
+              ref={(el) => {
+                slides.current[i] = el;
+              }}
+              className="carousel-slide"
+              role="tabpanel"
+              aria-labelledby={`case-tab-${p.id}`}
+              aria-roledescription={t(ui.project.slide)}
+              data-active={i === active || undefined}
+            >
+              <CaseStudy p={p} index={i} onNext={() => goTo(i + 1, true)} />
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );

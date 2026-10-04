@@ -23,6 +23,8 @@ export async function startSmoothScroll(): Promise<() => void> {
 
 /** Scrolls to a section and moves keyboard focus there. */
 export function scrollToId(id: string): void {
+  // Case studies live in a carousel: bring the right slide on screen first.
+  if (id.startsWith('case-')) window.dispatchEvent(new CustomEvent('fb:case', { detail: id }));
   const el = id === 'top' ? document.body : document.getElementById(id);
   if (!el) return;
   const offset = id === 'top' ? 0 : -72;

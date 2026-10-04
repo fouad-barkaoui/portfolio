@@ -57,7 +57,11 @@ export function ScrollIndex(): JSX.Element {
     let idx = -1;
     ENTRIES.forEach((e, i) => {
       const el = document.getElementById(e.id);
-      if (el && el.getBoundingClientRect().top <= LINE) idx = i;
+      if (!el) return;
+      const r = el.getBoundingClientRect();
+      // A case study in a carousel slide that isn't on screen doesn't count.
+      if (r.right < 0 || r.left > window.innerWidth) return;
+      if (r.top <= LINE) idx = i;
     });
     setActive(idx);
   }, []);
