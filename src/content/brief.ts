@@ -110,7 +110,7 @@ export const briefSteps: readonly Step[] = [
         rows: 5,
         hint: l('What it is, the problem it solves, and what success looks like for you.', 'ما هو، والمشكلة التي يحلّها، وكيف يبدو النجاح بالنسبة إليك.'),
       },
-      { id: 'users', kind: 'textarea', label: l('Who will use it?', 'من سيستخدمه؟'), rows: 2, hint: l('Customers, staff, the public — and roughly how many.', 'عملاء، موظفون، الجمهور — وتقريبًا كم عددهم.') },
+      { id: 'users', kind: 'textarea', label: l('Who will use it?', 'من سيستخدمه؟'), rows: 2, hint: l('Customers, staff or the public, and roughly how many.', 'عملاء، موظفون، الجمهور — وتقريبًا كم عددهم.') },
       { id: 'features', kind: 'textarea', label: l('Must-have features', 'الميزات الأساسية'), rows: 4, hint: l('One per line. Start with the most important.', 'ميزة في كل سطر. ابدأ بالأهم.') },
       {
         id: 'assets',
@@ -132,8 +132,8 @@ export const briefSteps: readonly Step[] = [
     id: 'security',
     title: l('Security', 'الأمان'),
     intro: l(
-      'This decides how the project is built and tested. If you are unsure, pick the closest level — we will refine it together.',
-      'هذا يحدّد طريقة بناء المشروع واختباره. إن لم تكن متأكدًا، اختر أقرب مستوى — وسنضبطه معًا.',
+      'This decides how the project is built and tested. If you are unsure, pick the closest level and we will refine it together.',
+      'هذا يحدّد طريقة بناء المشروع واختباره. إن لم تكن متأكدًا، اختر أقرب مستوى وسنضبطه معًا.',
     ),
     fields: [
       {
@@ -145,7 +145,7 @@ export const briefSteps: readonly Step[] = [
           { id: '1', label: l('1 · Standard', '1 · عادي'), hint: l('Public information only. No accounts, no personal data.', 'معلومات عامة فقط. لا حسابات ولا بيانات شخصية.') },
           { id: '2', label: l('2 · Protected', '2 · محمي'), hint: l('User accounts and personal data such as names, emails and phone numbers.', 'حسابات مستخدمين وبيانات شخصية مثل الأسماء والبريد وأرقام الهاتف.') },
           { id: '3', label: l('3 · Sensitive', '3 · حسّاس'), hint: l('Payments, health, financial or legal records, or confidential company data.', 'مدفوعات أو بيانات صحية أو مالية أو قانونية أو بيانات سرّية للشركة.') },
-          { id: '4', label: l('4 · Critical', '4 · حرج'), hint: l('Regulated, government or defence work that must resist targeted attacks — offline or air-gapped if needed.', 'عمل خاضع للتنظيم أو حكومي أو دفاعي يجب أن يصمد أمام هجمات موجّهة — دون اتصال أو بشبكة معزولة عند الحاجة.') },
+          { id: '4', label: l('4 · Critical', '4 · حرج'), hint: l('Regulated, government or defence work that must resist targeted attacks, offline or air-gapped if needed.', 'عمل خاضع للتنظيم أو حكومي أو دفاعي يجب أن يصمد أمام هجمات موجّهة — دون اتصال أو بشبكة معزولة عند الحاجة.') },
         ],
       },
       {
@@ -190,7 +190,7 @@ export const briefSteps: readonly Step[] = [
         kind: 'checks',
         label: l('Rules you must follow', 'قواعد يجب الالتزام بها'),
         options: [
-          { id: 'cndp', label: l('Morocco — Law 09-08 (CNDP)', 'المغرب — القانون 09-08 (CNDP)') },
+          { id: 'cndp', label: l('Morocco: Law 09-08 (CNDP)', 'المغرب: القانون 09-08 (CNDP)') },
           { id: 'gdpr', label: l('GDPR (users in Europe)', 'GDPR (مستخدمون في أوروبا)') },
           { id: 'pci', label: l('PCI DSS (card payments)', 'PCI DSS (الدفع بالبطاقات)') },
           { id: 'iso', label: l('ISO 27001', 'ISO 27001') },
@@ -249,9 +249,9 @@ export const briefSteps: readonly Step[] = [
         label: l('Currency', 'العملة'),
         half: true,
         options: [
-          { id: 'MAD', label: l('MAD — Moroccan dirham', 'MAD — درهم مغربي') },
-          { id: 'EUR', label: l('EUR — Euro', 'EUR — يورو') },
-          { id: 'USD', label: l('USD — US dollar', 'USD — دولار أمريكي') },
+          { id: 'MAD', label: l('MAD (Moroccan dirham)', 'MAD (درهم مغربي)') },
+          { id: 'EUR', label: l('EUR (Euro)', 'EUR (يورو)') },
+          { id: 'USD', label: l('USD (US dollar)', 'USD (دولار أمريكي)') },
         ],
       },
       { id: 'budget', kind: 'text', label: l('Budget range', 'نطاق الميزانية'), hint: l('A rough range is enough, or "not sure yet".', 'يكفي نطاق تقريبي، أو «لست متأكدًا بعد».') },
@@ -285,8 +285,8 @@ export const briefUi = {
   menu: l('Start a project', 'ابدأ مشروعًا'),
   title: l('Project brief', 'ملف المشروع'),
   intro: l(
-    'Tell me about your project — about 5 minutes. Your answers stay in this browser until you choose to send them.',
-    'أخبرني عن مشروعك — نحو 5 دقائق. تبقى إجاباتك في هذا المتصفح حتى تختار إرسالها.',
+    'Tell me about your project. It takes about 5 minutes. Your answers stay in this browser until you choose to send them.',
+    'أخبرني عن مشروعك. يستغرق ذلك نحو 5 دقائق. تبقى إجاباتك في هذا المتصفح حتى تختار إرسالها.',
   ),
   step: l('Step', 'الخطوة'),
   of: l('of', 'من'),
@@ -322,5 +322,5 @@ export const briefUi = {
   ref: l('Reference', 'المرجع'),
   levelHeading: l('Security level', 'مستوى الأمان'),
   cta: l('Fill in the project brief', 'املأ ملف المشروع'),
-  ctaHint: l('Have a project? Describe it in 5 minutes — including the security level it needs.', 'لديك مشروع؟ صِفه في 5 دقائق — بما في ذلك مستوى الأمان الذي يحتاجه.'),
+  ctaHint: l('Have a project? Describe it in 5 minutes, including the security level it needs.', 'لديك مشروع؟ صِفه في 5 دقائق، بما في ذلك مستوى الأمان الذي يحتاجه.'),
 } as const;

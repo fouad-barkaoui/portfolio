@@ -90,7 +90,7 @@ export function Header(): JSX.Element {
           </a>
           <button type="button" className="lang-btn" onClick={toggleLang} title={t(ui.langSwitchAria)}>
             <span lang={lang === 'en' ? 'ar' : 'en'}>{t(ui.langSwitch)}</span>
-            <span className="sr-only"> — {t(ui.langSwitchAria)}</span>
+            <span className="sr-only">: {t(ui.langSwitchAria)}</span>
           </button>
           <button
             type="button"

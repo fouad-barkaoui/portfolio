@@ -2,10 +2,10 @@ import { useEffect, useRef } from 'react';
 import { finePointer, prefersReducedMotion } from '@/lib/motion';
 
 /**
- * The page's backdrop: two slow light fields, a radar sweep, film grain, and
- * a lime dot-matrix that lights up under the cursor (aligned with the page's
- * own dot grid). Pure CSS at rest — the script only feeds the cursor position
- * and the grid offset, and never runs for touch or reduced motion.
+ * The page's dot grid, lit in lime around the cursor. The lit dots sit on the
+ * same 26px lattice as the body's dots, so it reads as one grid. The script
+ * only feeds the cursor position and the grid offset; on touch screens and
+ * with reduced motion the dots simply stay still.
  */
 export function SignalField({ variant }: { variant: 'hero' | 'footer' }): JSX.Element {
   const ref = useRef<HTMLDivElement>(null);
@@ -54,11 +54,7 @@ export function SignalField({ variant }: { variant: 'hero' | 'footer' }): JSX.El
 
   return (
     <div ref={ref} className="field" data-variant={variant} data-intro={variant === 'hero' ? 'field' : undefined} aria-hidden>
-      <span className="field-light is-a" />
-      <span className="field-light is-b" />
-      {variant === 'hero' ? <span className="field-sweep" /> : null}
       <span className="field-dots" />
-      <span className="field-grain" />
     </div>
   );
 }

@@ -640,11 +640,7 @@ img {
   --my: 42%;
   --ox: 0px;
   --oy: 0px;
-  --glow-a: rgb(228 242 34 / 0.17);
-  --glow-b: rgb(56 189 248 / 0.1);
-  --sweep: rgb(228 242 34 / 0.12);
   --dot-lit: rgb(228 242 34 / 0.9);
-  --grain: 0.07;
   position: absolute;
   inset: 0;
   overflow: hidden;
@@ -652,75 +648,11 @@ img {
   isolation: isolate;
 }
 :root[data-theme='light'] .field {
-  --glow-a: rgb(228 242 34 / 0.32);
-  --glow-b: rgb(56 189 248 / 0.14);
-  --sweep: rgb(138 154 0 / 0.14);
   --dot-lit: rgb(110 124 0 / 0.85);
-  --grain: 0.05;
 }
 .field > span {
   position: absolute;
   pointer-events: none;
-}
-/* Two slow light fields */
-.field-light {
-  width: 70vmax;
-  height: 70vmax;
-  border-radius: 50%;
-  will-change: transform;
-}
-.field-light.is-a {
-  top: -32vmax;
-  inset-inline-end: -18vmax;
-  background: radial-gradient(closest-side, var(--glow-a), transparent);
-  animation: field-drift-a 22s ease-in-out infinite alternate;
-}
-.field-light.is-b {
-  bottom: -40vmax;
-  inset-inline-start: -26vmax;
-  background: radial-gradient(closest-side, var(--glow-b), transparent);
-  animation: field-drift-b 26s ease-in-out infinite alternate;
-}
-@keyframes field-drift-a {
-  to {
-    transform: translate3d(-8vmax, 6vmax, 0) scale(1.08);
-  }
-}
-@keyframes field-drift-b {
-  to {
-    transform: translate3d(9vmax, -5vmax, 0) scale(1.12);
-  }
-}
-/* Radar sweep centred on the portrait */
-.field-sweep {
-  top: 46%;
-  left: 77%;
-  width: 980px;
-  height: 980px;
-  margin: -490px 0 0 -490px;
-  border-radius: 50%;
-  background: conic-gradient(from 0deg, transparent 0deg 290deg, var(--sweep) 352deg, transparent 360deg);
-  -webkit-mask: radial-gradient(closest-side, transparent 22%, #000 26%, #000 64%, transparent 100%);
-  mask: radial-gradient(closest-side, transparent 22%, #000 26%, #000 64%, transparent 100%);
-  animation: field-sweep 9s linear infinite;
-}
-[dir='rtl'] .field-sweep {
-  left: 23%;
-}
-@keyframes field-sweep {
-  to {
-    transform: rotate(360deg);
-  }
-}
-@media (max-width: 959px) {
-  .field-sweep,
-  [dir='rtl'] .field-sweep {
-    top: 74%;
-    left: 50%;
-    width: 760px;
-    height: 760px;
-    margin: -380px 0 0 -380px;
-  }
 }
 /* Lime dots on the page's own 26px lattice, lit around the cursor */
 .field-dots {
@@ -734,26 +666,10 @@ img {
 .field[data-live] .field-dots {
   opacity: 1;
 }
-/* Film grain */
-.field-grain {
-  inset: 0;
-  opacity: var(--grain);
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  mix-blend-mode: overlay;
-}
-/* Footer: the light rises from the bottom, dots glow behind the card */
+/* Footer: the lit dots sit low, behind the links */
 .field[data-variant='footer'] {
   --mx: 50%;
   --my: 100%;
-}
-.field[data-variant='footer'] .field-light.is-a {
-  top: auto;
-  bottom: -46vmax;
-  inset-inline-end: -10vmax;
-}
-.field[data-variant='footer'] .field-light.is-b {
-  bottom: auto;
-  top: -50vmax;
 }
 .field[data-variant='footer'] .field-dots {
   -webkit-mask: radial-gradient(420px circle at var(--mx) var(--my), #000 0%, rgb(0 0 0 / 0.3) 50%, transparent 80%);
@@ -841,7 +757,6 @@ img {
 }
 .hire-badge:hover {
   border-color: var(--accent);
-  transform: translateY(-1px);
 }
 .hire-roles {
   color: var(--muted);
@@ -855,12 +770,7 @@ img {
   flex-shrink: 0;
 }
 .hire-pulse::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  background: #34d399;
-  animation: hire-pulse 2s ease-out infinite;
+  content: none;
 }
 :root[data-theme='light'] .hire-pulse,
 :root[data-theme='light'] .hire-pulse::after {
@@ -2026,14 +1936,6 @@ img {
 }
 .shot-frame:hover {
   border-color: color-mix(in oklab, var(--accent) 55%, var(--line-2));
-  transform: translateY(-3px);
-  box-shadow: 0 34px 60px -30px rgb(0 0 0 / 0.7);
-}
-.shot-frame img {
-  transition: transform 0.7s var(--ease-snap);
-}
-.shot-frame:hover img {
-  transform: scale(1.012);
 }
 .shot-zoom {
   display: grid;
@@ -2659,9 +2561,6 @@ a.social:hover .social-go {
 }
 .social-icon[data-brand='facebook'] {
   background: #0866ff;
-}
-a.social:hover .social-icon[data-brand] {
-  transform: translateY(-2px) rotate(-6deg);
 }
 
 /* ── Reading progress pill (ScrollIndex.tsx, ported from Kanz) ────────── */
@@ -3662,7 +3561,6 @@ html.is-locked {
     box-shadow 0.3s var(--ease-snap);
 }
 .brief-btn:hover {
-  transform: translateY(-1px);
   box-shadow: 0 10px 24px -12px color-mix(in oklab, var(--accent) 80%, transparent);
 }
 .nav-brief {
@@ -3706,7 +3604,6 @@ html.is-locked {
     background-color 0.2s ease;
 }
 .brief-cta:hover {
-  transform: translateY(-2px);
   border-color: var(--accent);
   background: color-mix(in oklab, var(--accent) 14%, var(--bg-2));
 }
@@ -4103,7 +4000,6 @@ html.is-locked {
   line-height: 1.45;
 }
 .brief-option:hover .brief-card {
-  transform: translateY(-1px);
   border-color: color-mix(in oklab, var(--ink) 30%, var(--line-2));
 }
 .brief-option[data-on] .brief-card {

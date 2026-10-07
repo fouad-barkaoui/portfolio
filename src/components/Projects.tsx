@@ -9,6 +9,10 @@ import offlineInstall from '@/assets/assas/offline-install.avif?w=600;1040&forma
 import repoMap from '@/assets/assas/repo-map.avif?w=600;1000;1472&format=avif;webp&as=picture';
 import reportSummary from '@/assets/assas/report-summary.avif?w=800;1472&format=avif;webp&as=picture';
 import scanSweep from '@/assets/assas/scan-sweep.avif?w=800;1472&format=avif;webp&as=picture';
+import promptCrawl from '@/assets/prompt/crawl.avif?w=800;1400;2400&format=avif;webp&as=picture';
+import promptFlow from '@/assets/prompt/flow.avif?w=600;1000;1800&format=avif;webp&as=picture';
+import promptPaste from '@/assets/prompt/paste.avif?w=600;1000;1800&format=avif;webp&as=picture';
+import promptReport from '@/assets/prompt/report.avif?w=600;1000;1800&format=avif;webp&as=picture';
 import studioCompare from '@/assets/studio/compare.avif?w=800;1400;2400&format=avif;webp&as=picture';
 import studioHome from '@/assets/studio/home.avif?w=800;1400;2400&format=avif;webp&as=picture';
 import studioKeywords from '@/assets/studio/keyword-scan.avif?w=600;1000;1800&format=avif;webp&as=picture';
@@ -19,6 +23,7 @@ import {
   diagrams,
   kanzScreens,
   projects,
+  promptScreens,
   studioScreens,
   tagLabels,
   ui,
@@ -33,7 +38,11 @@ import { Lightbox, type LightboxShot } from './Lightbox';
 import { Picture } from './Picture';
 import { SectionHead, Status } from './primitives';
 
-type ShotId = (typeof kanzScreens)[number]['id'] | (typeof assasScreens)[number]['id'] | (typeof studioScreens)[number]['id'];
+type ShotId =
+  | (typeof kanzScreens)[number]['id']
+  | (typeof assasScreens)[number]['id']
+  | (typeof studioScreens)[number]['id']
+  | (typeof promptScreens)[number]['id'];
 
 const SHOT_PICS: Record<ShotId, ImagetoolsPicture> = {
   'news-dark': newsDark,
@@ -45,6 +54,10 @@ const SHOT_PICS: Record<ShotId, ImagetoolsPicture> = {
   'repo-map': repoMap,
   'create-report': createReport,
   'offline-install': offlineInstall,
+  'prompt-crawl': promptCrawl,
+  'prompt-paste': promptPaste,
+  'prompt-report': promptReport,
+  'prompt-flow': promptFlow,
   'studio-compare': studioCompare,
   'studio-home': studioHome,
   'studio-parse': studioParse,
@@ -55,6 +68,7 @@ const SHOT_PICS: Record<ShotId, ImagetoolsPicture> = {
 /** Real screenshots per case study, and the heading above them. */
 const SCREENS: Record<Project['id'], { title: L; list: readonly (Screen & { id: ShotId })[] }> = {
   kanz: { title: ui.project.screens, list: kanzScreens },
+  prompt: { title: ui.project.screens, list: promptScreens },
   studio: { title: ui.project.screensSample, list: studioScreens },
   assas: { title: ui.project.screensScan, list: assasScreens },
 };
@@ -95,13 +109,13 @@ function CaseStudy({ p, index, onNext }: { p: Project; index: number; onNext: ()
           <span>{t(p.kind)}</span>
           <span>{t(p.where)}</span>
           <span dir="ltr">
-            {formatMonth(p.start)} — <span aria-label={t(ui.project.present)}>∞</span>
+            {formatMonth(p.start)} – {t(ui.project.present)}
           </span>
           {now ? <span>{formatDuration(p.start, now, lang)}</span> : null}
         </p>
         {p.url ? (
           <a className="btn btn-ghost btn-sm" href={p.url} target="_blank" rel="noopener noreferrer">
-            {t(ui.project.visit)}
+            {t(ui.project.visit)} {p.name}
             <span className="mono url">{p.url.replace(/^https?:\/\//, '')}</span>
             <ArrowUpRight className="flip-rtl" size={15} strokeWidth={1.9} aria-hidden />
           </a>
@@ -151,7 +165,7 @@ function CaseStudy({ p, index, onNext }: { p: Project; index: number; onNext: ()
 
         <section className="case-block span-2 flush" aria-label={t(shots.title)}>
           <h4 className="block-title mono">
-            <span>—</span> {t(shots.title)}
+            <span>↳</span> {t(shots.title)}
           </h4>
           <ul className="shots">
             {shots.list.map((s, i) => (

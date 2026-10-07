@@ -45,7 +45,7 @@ function answerEn(f: Field, v: Value | undefined): string {
 function toMarkdown(values: Values, ref: string, lang: string): string {
   const lines: string[] = [];
   const level = briefSteps.flatMap((s) => s.fields).find((f) => f.id === 'level')!;
-  lines.push(`# Project brief — ${String(values.projectName || '').trim() || 'untitled'}`);
+  lines.push(`# Project brief: ${String(values.projectName || '').trim() || 'untitled'}`);
   lines.push('');
   lines.push(`Reference: ${ref}  `);
   lines.push(`Date: ${new Date().toISOString().slice(0, 10)}  `);
@@ -368,8 +368,8 @@ export default function BriefForm({ onClose }: { onClose: () => void }): JSX.Ele
   const sendMail = (): void => {
     if (!confirm()) return;
     const full = markdown();
-    const subjectBits = [String(values.projectName || '').trim(), String(values.name || '').trim()].filter(Boolean).join(' — ');
-    const subject = `Project brief ${ref}${subjectBits ? ` — ${subjectBits}` : ''}`;
+    const subjectBits = [String(values.projectName || '').trim(), String(values.name || '').trim()].filter(Boolean).join(', ');
+    const subject = `Project brief ${ref}${subjectBits ? `, ${subjectBits}` : ''}`;
     let text = full;
     if (full.length > MAILTO_BODY_MAX) {
       download(fileName, full);

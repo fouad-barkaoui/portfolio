@@ -43,7 +43,7 @@ export function About(): JSX.Element {
         <div className="about-main">
           <header className="section-head">
             <Note>{t(ui.notes.sayHi)}</Note>
-            <p className="eyebrow mono">01 — {t(ui.section.about)}</p>
+            <p className="eyebrow mono">{t(ui.section.about)}</p>
             <h2 id="about-title" className="greeting">
               {t(greeting)}
             </h2>

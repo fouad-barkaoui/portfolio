@@ -109,7 +109,7 @@ export function Hero(): JSX.Element {
             </div>
           </div>
           <figcaption className="fig-caption mono" data-intro="fade" style={{ '--i': 5 } as CSSProperties}>
-            <span>Fig. 1</span> {t(identity.nameLocal)} — {t(identity.country)}
+            <span>Fig. 1</span> {t(identity.nameLocal)}, {t(identity.country)}
           </figcaption>
         </figure>
       </div>

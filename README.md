@@ -2,10 +2,10 @@
 
 **Live:** https://fouad-barkaoui.vercel.app
 
-SOC analyst & fullstack developer from Morocco. Case studies for Kanz (live
-product), Resume Studio (offline AI resume optimizer) and ASSAS (codebase
-security scanner), the security learning path, the stack in context and every
-way to reach me. English and Arabic (full right-to-left), dark by default with
+SOC analyst and fullstack developer from Morocco. Case studies for Kanz (live
+product), Prompt Engine (prompt quality and security scanner), Resume Studio
+(offline AI resume optimizer) and ASSAS (codebase security scanner), the
+security learning path, the stack in context and every way to reach me. English and Arabic (full right-to-left), dark by default with
 a light theme.
 
 ## Stack
@@ -34,7 +34,7 @@ npm run preview   # serve dist/
 | Sections | `src/components/` (Hero, About, Projects, SecurityCorner, Stack, Closing) |
 | Styles and theme tokens | `src/styles/index.css` |
 | Portrait | `src/assets/portrait/fouad.avif` |
-| Screenshots (Kanz, Resume Studio, ASSAS) | `src/assets/kanz/`, `src/assets/studio/`, `src/assets/assas/` |
+| Screenshots | `src/assets/kanz/`, `src/assets/prompt/`, `src/assets/studio/`, `src/assets/assas/` |
 | Official "Built with" logos (drop-in) | `src/assets/logos/` — see the README there |
 | Social preview image | generated at build by `scripts/og.mjs` → `public/og-image.jpg` |
 | Security headers (CSP, HSTS, …) | `vercel.json` |

@@ -60,8 +60,8 @@ parts.push(text(unbounded, 'FOUAD', 84, 250, 96, ink, -0.045).svg);
 parts.push(text(unbounded, 'BARKAOUI', 84, 340, 96, muted, -0.045).svg);
 
 // Role + promise
-parts.push(text(mono, 'SOC analyst & fullstack developer — vibe coder & prompt engineer', 86, 388, 16, muted).svg);
-const p1 = text(sans, 'I turn ideas into working products — fast, clean and', 84, 428, 30, ink);
+parts.push(text(mono, 'SOC analyst and fullstack developer. Vibe coder and prompt engineer.', 86, 388, 16, muted).svg);
+const p1 = text(sans, 'I turn ideas into working products: fast, clean and', 84, 428, 30, ink);
 parts.push(p1.svg);
 const strong = text(sansBold, 'secure by default', 84, 468, 30, ink);
 parts.push(`<rect x="84" y="${468 - 11}" width="${strong.width}" height="12" fill="${lime}" fill-opacity="0.45"/>`);
@@ -87,7 +87,7 @@ tick(fx - 6, fy + 426, 1, -1);
 tick(fx + 336, fy + 426, -1, -1);
 const cap = text(monoBold, 'Fig. 1', fx, fy + 458, 16, ink);
 parts.push(cap.svg);
-parts.push(text(mono, 'Fouad Barkaoui — Morocco', fx + cap.width + 10, fy + 458, 16, muted).svg);
+parts.push(text(mono, 'Fouad Barkaoui, Morocco', fx + cap.width + 10, fy + 458, 16, muted).svg);
 
 const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">
 <rect width="${W}" height="${H}" fill="#06070b"/>${parts.join('')}</svg>`;

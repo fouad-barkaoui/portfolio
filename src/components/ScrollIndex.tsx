@@ -14,6 +14,7 @@ const ENTRIES: readonly Entry[] = [
   { id: 'about', label: ui.nav.about, level: 2 },
   { id: 'work', label: ui.nav.work, level: 2 },
   { id: 'case-kanz', label: { en: 'Kanz', ar: 'Kanz' }, level: 3 },
+  { id: 'case-prompt', label: { en: 'Prompt Engine', ar: 'Prompt Engine' }, level: 3 },
   { id: 'case-studio', label: { en: 'Resume Studio', ar: 'Resume Studio' }, level: 3 },
   { id: 'case-assas', label: { en: 'ASSAS', ar: 'ASSAS' }, level: 3 },
   { id: 'security', label: ui.nav.security, level: 2 },
@@ -60,7 +61,7 @@ export function ScrollIndex(): JSX.Element {
       if (!el) return;
       const r = el.getBoundingClientRect();
       // A case study in a carousel slide that isn't on screen doesn't count.
-      if (r.right < 0 || r.left > window.innerWidth) return;
+      if (el.closest('.carousel-slide:not([data-active])')) return;
       if (r.top <= LINE) idx = i;
     });
     setActive(idx);
@@ -210,7 +211,7 @@ export function ScrollIndex(): JSX.Element {
                   <span className="scroll-index-dot" aria-hidden />
                   <span className="scroll-index-text">
                     {t(e.label)}
-                    {i === active ? <span className="sr-only"> — {t(ui.index.current)}</span> : null}
+                    {i === active ? <span className="sr-only">, {t(ui.index.current)}</span> : null}
                   </span>
                   {i === active ? (
                     <Check className="scroll-index-check" size={12} strokeWidth={2.4} aria-hidden />
