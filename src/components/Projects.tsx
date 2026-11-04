@@ -270,20 +270,75 @@ export function Projects(): JSX.Element {
   const { t, lang } = useLang();
   const track = useRef<HTMLDivElement>(null);
   const bar = useRef<HTMLDivElement>(null);
+  const rail = useRef<HTMLDivElement>(null);
   const slides = useRef<(HTMLElement | null)[]>([]);
   const [active, setActive] = useState(0);
   const [height, setHeight] = useState<number | undefined>(undefined);
   const frame = useRef(0);
+  const target = useRef<number | null>(null);
+  const settle = useRef(0);
 
-  const show = useCallback((i: number, smooth = true) => {
+  /** The slide whose left edge sits closest to the track's. */
+  const nearest = useCallback((): number => {
+    const tr = track.current;
+    if (!tr) return 0;
+    const left = tr.getBoundingClientRect().left;
+    let best = 0;
+    let dist = Infinity;
+    slides.current.forEach((el, i) => {
+      if (!el) return;
+      const d = Math.abs(el.getBoundingClientRect().left - left);
+      if (d < dist) {
+        dist = d;
+        best = i;
+      }
+    });
+    return best;
+  }, []);
+
+  /** How far slide i's left edge is from the track's (0 when it is in place). */
+  const offset = useCallback((i: number): number => {
     const tr = track.current;
     const el = slides.current[i];
-    if (!tr || !el) return;
-    const delta = el.getBoundingClientRect().left - tr.getBoundingClientRect().left;
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    tr.scrollBy({ left: delta, behavior: smooth && !reduce ? 'smooth' : 'auto' });
-    setActive(i);
+    if (!tr || !el) return 0;
+    return el.getBoundingClientRect().left - tr.getBoundingClientRect().left;
   }, []);
+
+  /** An arrow or tab glide has ended: snapping back on, state from the track. */
+  const land = useCallback(() => {
+    window.clearTimeout(settle.current);
+    const tr = track.current;
+    if (tr) tr.style.scrollSnapType = '';
+    if (target.current === null) return;
+    target.current = null;
+    setActive(nearest());
+  }, [nearest]);
+
+  const show = useCallback(
+    (i: number, smooth = true) => {
+      const tr = track.current;
+      if (!tr || !slides.current[i]) return;
+      const to = tr.scrollLeft + offset(i);
+      const glide = smooth && !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      window.clearTimeout(settle.current);
+      if (glide && Math.abs(offset(i)) > 1) {
+        // Snapping is paused while the track glides, so a second click can
+        // retarget the glide instead of being cut short by a snap. The scroll
+        // handler ignores the slides passed on the way and calls land() once
+        // slide i is in place (or after a timeout, e.g. a swipe took over).
+        target.current = i;
+        tr.style.scrollSnapType = 'none';
+        settle.current = window.setTimeout(land, 1200);
+        tr.scrollTo({ left: to, behavior: 'smooth' });
+      } else {
+        target.current = null;
+        tr.style.scrollSnapType = '';
+        tr.scrollTo({ left: to, behavior: 'auto' });
+      }
+      setActive(i);
+    },
+    [land, offset],
+  );
 
   // Which slide is on screen, from the track's scroll position.
   useEffect(() => {
@@ -292,26 +347,29 @@ export function Projects(): JSX.Element {
     const onScroll = (): void => {
       cancelAnimationFrame(frame.current);
       frame.current = requestAnimationFrame(() => {
-        const left = tr.getBoundingClientRect().left;
-        let best = 0;
-        let dist = Infinity;
-        slides.current.forEach((el, i) => {
-          if (!el) return;
-          const d = Math.abs(el.getBoundingClientRect().left - left);
-          if (d < dist) {
-            dist = d;
-            best = i;
-          }
-        });
-        setActive(best);
+        const aim = target.current;
+        if (aim !== null) {
+          if (Math.abs(offset(aim)) <= 1) land();
+          return;
+        }
+        setActive(nearest());
       });
     };
+    // A finger or wheel on the track takes over from any glide in progress.
+    const takeOver = (): void => {
+      if (target.current !== null) land();
+    };
     tr.addEventListener('scroll', onScroll, { passive: true });
+    tr.addEventListener('touchstart', takeOver, { passive: true });
+    tr.addEventListener('wheel', takeOver, { passive: true });
     return () => {
+      tr.removeEventListener('touchstart', takeOver);
+      tr.removeEventListener('wheel', takeOver);
       tr.removeEventListener('scroll', onScroll);
       cancelAnimationFrame(frame.current);
+      window.clearTimeout(settle.current);
     };
-  }, []);
+  }, [land, nearest, offset]);
 
   // Track height follows the visible slide; the others are inert.
   useEffect(() => {
@@ -336,6 +394,42 @@ export function Projects(): JSX.Element {
     show(active, false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lang]);
+
+  // On narrow screens the rail scrolls: keep the active card in view and fade
+  // whichever edge still has cards behind it.
+  const edges = useCallback(() => {
+    const r = rail.current;
+    if (!r) return;
+    const x = Math.abs(r.scrollLeft);
+    const more = r.scrollWidth - r.clientWidth > 2;
+    r.toggleAttribute('data-more-start', more && x > 4);
+    r.toggleAttribute('data-more-end', more && x + r.clientWidth < r.scrollWidth - 4);
+  }, []);
+  useEffect(() => {
+    const r = rail.current;
+    if (!r) return;
+    edges();
+    r.addEventListener('scroll', edges, { passive: true });
+    window.addEventListener('resize', edges, { passive: true });
+    return () => {
+      r.removeEventListener('scroll', edges);
+      window.removeEventListener('resize', edges);
+    };
+  }, [edges]);
+  useEffect(() => {
+    const r = rail.current;
+    const tab = r?.children[active] as HTMLElement | undefined;
+    if (!r || !tab || r.scrollWidth <= r.clientWidth) return;
+    const box = r.getBoundingClientRect();
+    const at = tab.getBoundingClientRect();
+    const pad = 28;
+    let dx = 0;
+    if (at.left < box.left + pad) dx = at.left - box.left - pad;
+    else if (at.right > box.right - pad) dx = at.right - box.right + pad;
+    if (!dx) return;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    r.scrollBy({ left: dx, behavior: reduce ? 'auto' : 'smooth' });
+  }, [active, lang]);
 
   // Links elsewhere on the page (index, recruiter card) ask for a case by id.
   useEffect(() => {
@@ -375,7 +469,7 @@ export function Projects(): JSX.Element {
       <SectionHead id="work-title" note={ui.notes.building} title={ui.section.projects} count={projects.length} />
       <div className="carousel" aria-roledescription={t(ui.project.carousel)}>
         <div ref={bar} className="carousel-bar">
-          <div className="carousel-tabs" role="tablist" aria-label={t(ui.section.projects)} onKeyDown={onTabsKey}>
+          <div ref={rail} className="carousel-tabs" role="tablist" aria-label={t(ui.section.projects)} onKeyDown={onTabsKey}>
             {projects.map((p, i) => (
               <button
                 key={p.id}
@@ -388,32 +482,38 @@ export function Projects(): JSX.Element {
                 className="carousel-tab"
                 onClick={() => goTo(i)}
               >
-                <span className="mono" aria-hidden>
-                  {String(i + 1).padStart(2, '0')}
+                <span className="carousel-tab-top mono" aria-hidden>
+                  <span dir="ltr">{String(i + 1).padStart(2, '0')}</span>
+                  <i className="carousel-tab-dot" data-tone={p.status === 'dev' ? 'dev' : 'live'} />
                 </span>
-                {p.name}
-                <i className="carousel-tab-dot" data-tone={p.status === 'dev' ? 'dev' : 'live'} aria-hidden />
+                <span className="carousel-tab-name">{p.name}</span>
+                <span className="carousel-tab-meta mono">{t(STATUS_LABEL[p.status])}</span>
               </button>
             ))}
           </div>
           <div className="carousel-nav">
             <span className="carousel-count mono" dir="ltr" aria-hidden>
-              <b>{String(active + 1).padStart(2, '0')}</b> / {String(projects.length).padStart(2, '0')}
+              <b>{String(active + 1).padStart(2, '0')}</b>
+              <span>/ {String(projects.length).padStart(2, '0')}</span>
             </span>
-            <button type="button" className="icon-btn carousel-arrow" onClick={() => goTo(active - 1)} aria-label={t(ui.project.prevProject)}>
-              <ArrowLeft className="flip-rtl" size={17} strokeWidth={2} aria-hidden />
-            </button>
-            <button type="button" className="icon-btn carousel-arrow" onClick={() => goTo(active + 1)} aria-label={t(ui.project.nextProjectAria)}>
-              <ArrowRight className="flip-rtl" size={17} strokeWidth={2} aria-hidden />
-            </button>
+            <span className="carousel-steps" aria-hidden>
+              {projects.map((p, i) => (
+                <i key={p.id} data-state={i === active ? 'on' : i < active ? 'past' : undefined} />
+              ))}
+            </span>
+            <span className="carousel-hint mono" aria-hidden>
+              {t(ui.project.swipe)}
+            </span>
+            <span className="carousel-arrows">
+              <button type="button" className="icon-btn carousel-arrow" onClick={() => goTo(active - 1)} aria-label={t(ui.project.prevProject)}>
+                <ArrowLeft className="flip-rtl" size={17} strokeWidth={2} aria-hidden />
+              </button>
+              <button type="button" className="icon-btn carousel-arrow" onClick={() => goTo(active + 1)} aria-label={t(ui.project.nextProjectAria)}>
+                <ArrowRight className="flip-rtl" size={17} strokeWidth={2} aria-hidden />
+              </button>
+            </span>
           </div>
-          <span className="carousel-progress" aria-hidden>
-            <i style={{ width: `${((active + 1) / projects.length) * 100}%` }} />
-          </span>
         </div>
-        <p className="carousel-hint mono" aria-hidden>
-          {t(ui.project.swipe)}
-        </p>
         <div ref={track} className="carousel-track" style={height ? { height } : undefined}>
           {projects.map((p, i) => (
             <div

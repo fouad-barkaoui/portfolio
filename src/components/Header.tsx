@@ -18,7 +18,7 @@ const LINKS = [
 
 export function Header(): JSX.Element {
   const { t, toggle: toggleLang, lang } = useLang();
-  const { theme, toggle: toggleTheme } = useTheme();
+  const { shown: theme, toggle: toggleTheme } = useTheme();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 

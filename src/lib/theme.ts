@@ -9,8 +9,12 @@ function current(): Theme {
 }
 
 /** Dark by default; the pre-paint script in index.html applies a saved choice. */
-export function useTheme(): { theme: Theme; toggle: () => void } {
+export function useTheme(): { theme: Theme; shown: Theme; toggle: () => void } {
   const [theme, setTheme] = useState<Theme>(current);
+  // The prerendered page is dark, so the first client render must match it;
+  // anything drawn from the saved theme waits until after hydration.
+  const [hydrated, setHydrated] = useState(false);
+  useEffect(() => setHydrated(true), []);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -25,5 +29,5 @@ export function useTheme(): { theme: Theme; toggle: () => void } {
   }, [theme]);
 
   const toggle = useCallback(() => setTheme((t) => (t === 'dark' ? 'light' : 'dark')), []);
-  return { theme, toggle };
+  return { theme, shown: hydrated ? theme : 'dark', toggle };
 }
