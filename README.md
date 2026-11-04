@@ -3,7 +3,7 @@
 **Live:** https://fouad-barkaoui.vercel.app
 
 SOC analyst and fullstack developer from Morocco. Case studies for Kanz (live
-product), Prompt Engine (prompt quality and security scanner), Resume Studio
+product), Windows Field Manual (189-command Windows troubleshooting reference), Prompt Engine (prompt quality and security scanner), Resume Studio
 (offline AI resume optimizer) and ASSAS (codebase security scanner), the
 security learning path, the stack in context and every way to reach me. English and Arabic (full right-to-left), dark by default with
 a light theme.

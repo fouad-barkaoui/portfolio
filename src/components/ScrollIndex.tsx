@@ -14,6 +14,7 @@ const ENTRIES: readonly Entry[] = [
   { id: 'about', label: ui.nav.about, level: 2 },
   { id: 'work', label: ui.nav.work, level: 2 },
   { id: 'case-kanz', label: { en: 'Kanz', ar: 'Kanz' }, level: 3 },
+  { id: 'case-windows', label: { en: 'Windows Manual', ar: 'Windows Manual' }, level: 3 },
   { id: 'case-prompt', label: { en: 'Prompt Engine', ar: 'Prompt Engine' }, level: 3 },
   { id: 'case-studio', label: { en: 'Resume Studio', ar: 'Resume Studio' }, level: 3 },
   { id: 'case-assas', label: { en: 'ASSAS', ar: 'ASSAS' }, level: 3 },

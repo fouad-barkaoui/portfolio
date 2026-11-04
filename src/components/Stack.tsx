@@ -36,7 +36,7 @@ export function Stack(): JSX.Element {
                           e.preventDefault();
                           scrollToId(`case-${pid}`);
                         }}
-                        aria-label={`${it.name} — ${t(ui.usedIn)} ${NAMES[pid]}`}
+                        aria-label={`${it.name}: ${t(ui.usedIn)} ${NAMES[pid]}`}
                       >
                         {NAMES[pid]}
                       </a>

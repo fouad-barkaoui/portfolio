@@ -13,6 +13,11 @@ import promptCrawl from '@/assets/prompt/crawl.avif?w=800;1400;2400&format=avif;
 import promptFlow from '@/assets/prompt/flow.avif?w=600;1000;1800&format=avif;webp&as=picture';
 import promptPaste from '@/assets/prompt/paste.avif?w=600;1000;1800&format=avif;webp&as=picture';
 import promptReport from '@/assets/prompt/report.avif?w=600;1000;1800&format=avif;webp&as=picture';
+import windowsCard from '@/assets/windows/card.avif?w=800;1400;2400&format=avif;webp&as=picture';
+import windowsHome from '@/assets/windows/home.avif?w=800;1400;2400&format=avif;webp&as=picture';
+import windowsMobile from '@/assets/windows/mobile.avif?w=600;1000;1800&format=avif;webp&as=picture';
+import windowsPalette from '@/assets/windows/palette.avif?w=600;1000;1800&format=avif;webp&as=picture';
+import windowsPlaybook from '@/assets/windows/playbook.avif?w=600;1000;1800&format=avif;webp&as=picture';
 import studioCompare from '@/assets/studio/compare.avif?w=800;1400;2400&format=avif;webp&as=picture';
 import studioHome from '@/assets/studio/home.avif?w=800;1400;2400&format=avif;webp&as=picture';
 import studioKeywords from '@/assets/studio/keyword-scan.avif?w=600;1000;1800&format=avif;webp&as=picture';
@@ -30,6 +35,7 @@ import {
   type L,
   type Project,
   type Screen,
+  windowsScreens,
 } from '@/content/content';
 import { useLang } from '@/lib/i18n';
 import { formatDuration, formatMonth, useNow } from '@/lib/time';
@@ -42,7 +48,8 @@ type ShotId =
   | (typeof kanzScreens)[number]['id']
   | (typeof assasScreens)[number]['id']
   | (typeof studioScreens)[number]['id']
-  | (typeof promptScreens)[number]['id'];
+  | (typeof promptScreens)[number]['id']
+  | (typeof windowsScreens)[number]['id'];
 
 const SHOT_PICS: Record<ShotId, ImagetoolsPicture> = {
   'news-dark': newsDark,
@@ -63,11 +70,17 @@ const SHOT_PICS: Record<ShotId, ImagetoolsPicture> = {
   'studio-parse': studioParse,
   'studio-keywords': studioKeywords,
   'studio-xyz': studioXyz,
+  'windows-home': windowsHome,
+  'windows-card': windowsCard,
+  'windows-playbook': windowsPlaybook,
+  'windows-palette': windowsPalette,
+  'windows-mobile': windowsMobile,
 };
 
 /** Real screenshots per case study, and the heading above them. */
 const SCREENS: Record<Project['id'], { title: L; list: readonly (Screen & { id: ShotId })[] }> = {
   kanz: { title: ui.project.screens, list: kanzScreens },
+  windows: { title: ui.project.screens, list: windowsScreens },
   prompt: { title: ui.project.screens, list: promptScreens },
   studio: { title: ui.project.screensSample, list: studioScreens },
   assas: { title: ui.project.screensScan, list: assasScreens },

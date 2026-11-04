@@ -91,7 +91,7 @@ export const howIWork: readonly { title: L; line: L }[] = [
 export type ProjectStatus = 'dev' | 'live' | 'local';
 
 export interface Project {
-  id: 'assas' | 'kanz' | 'studio' | 'prompt';
+  id: 'assas' | 'kanz' | 'studio' | 'prompt' | 'windows';
   name: string;
   role: L;
   kind: L;
@@ -158,6 +158,73 @@ export const projects: readonly Project[] = [
       l('Medications catalog (Pro)', 'كتالوج الأدوية (Pro)'),
       l('Cookie and terms onboarding', 'ترحيب بملفات تعريف الارتباط والشروط'),
       l('A "Start here" tour', 'جولة «ابدأ من هنا»'),
+    ],
+  },
+  {
+    id: 'windows',
+    name: 'Windows Field Manual',
+    role: l('Author & Developer', 'المؤلف والمطوّر'),
+    kind: l('Own project · Reference manual', 'مشروع خاص · دليل مرجعي'),
+    where: l('Morocco (Remote)', 'المغرب (عن بُعد)'),
+    status: 'live',
+    start: '2026-11',
+    url: 'https://windows-field-manual.vercel.app',
+    problem: l(
+      'Windows troubleshooting advice is scattered across forum threads full of copy-paste commands. They rarely say what a command changes, what its output means, or which ones can break the machine.',
+      'نصائح إصلاح ويندوز مبعثرة بين مواضيع المنتديات المليئة بأوامر تُنسَخ وتُلصَق. وقلّما تقول ما الذي يغيّره الأمر، أو ماذا تعني نتيجته، أو أي الأوامر قد تعطّل الجهاز.',
+    ),
+    does: [
+      l(
+        '189 investigation commands in 13 chapters and 70 sections, for Windows 10 and 11, in Windows PowerShell 5.1 and PowerShell 7. Every card shows the command, what it does and a "pro move" for reading the result.',
+        '189 أمر فحص في 13 فصلًا و70 قسمًا، لويندوز 10 و11، بـ Windows PowerShell 5.1 وPowerShell 7. كل بطاقة تعرض الأمر وما يفعله و«نصيحة محترف» لقراءة النتيجة.',
+      ),
+      l(
+        'Every command is tagged before you can copy it: Read-only (146), Changes system (36, make a restore point first) or Danger (7, can lose data or break boot), plus an Admin tag when it needs an elevated terminal.',
+        'كل أمر يحمل وسمًا قبل أن تنسخه: للقراءة فقط (146) أو يغيّر النظام (36، أنشئ نقطة استعادة أولًا) أو خطر (7، قد يفقدك بيانات أو يعطّل الإقلاع)، مع وسم «مسؤول» حين يحتاج طرفية مرفوعة الصلاحيات.',
+      ),
+      l(
+        '8 symptom playbooks (slow PC, blue screens, full disk, failing Windows Update, no network, a PC you think was compromised, sleep and battery, a device that stopped working): ordered paths through the cards.',
+        '8 مسارات حسب العَرَض (جهاز بطيء، شاشات زرقاء، قرص ممتلئ، فشل تحديث ويندوز، لا إنترنت، جهاز تشكّ بأنه مخترَق، النوم والبطارية، جهاز توقّف عن العمل): طرق مرتّبة عبر البطاقات.',
+      ),
+      l(
+        'A filter box and a Ctrl K palette that jumps to any card, section, playbook, event ID or stop code. Copy buttons, a link to every card, and "practiced" checkboxes with progress saved in your browser.',
+        'مربع تصفية ولوحة أوامر Ctrl K تنتقل إلى أي بطاقة أو قسم أو مسار أو رقم حدث أو رمز إيقاف. أزرار نسخ ورابط لكل بطاقة وخانات «جرّبتُه» مع تقدّم محفوظ في متصفحك.',
+      ),
+      l(
+        'A read-only daily health-check script that snapshots startup entries, scheduled tasks, services, drivers, listening ports, local admins and installed programs, then lists what is new or removed since the last run. Also a seven-week training plan and a printable A4 edition.',
+        'سكربت فحص صحي يومي للقراءة فقط يلتقط لقطة لعناصر بدء التشغيل والمهام المجدولة والخدمات والتعريفات والمنافذ المفتوحة والمسؤولين المحليين والبرامج المثبّتة، ثم يعرض ما أُضيف أو أُزيل منذ التشغيل السابق. وخطة تدريب من سبعة أسابيع ونسخة A4 للطباعة.',
+      ),
+    ],
+    built: l(
+      'A plain static site: HTML, CSS and JavaScript, with no framework, no build step and no dependencies. All content sits in one data file that the page renders, and a Python script (WeasyPrint) rebuilds the 52-page PDF from that same file, so the web and print editions stay identical. Light, dark and system themes, from 320 px phones to wide screens, plus a print stylesheet. Hosted as a static site on Vercel.',
+      'موقع ثابت بسيط: HTML وCSS وJavaScript، دون إطار عمل ودون خطوة بناء ودون اعتماديات. كل المحتوى في ملف بيانات واحد تعرضه الصفحة، وسكربت Python (WeasyPrint) يعيد بناء ملف PDF من 52 صفحة من الملف نفسه، فتبقى نسخة الويب ونسخة الطباعة متطابقتين. سمات فاتحة وداكنة وتلقائية، من هواتف بعرض 320 بكسل إلى الشاشات العريضة، مع تنسيق للطباعة. مستضاف كموقع ثابت على Vercel.',
+    ),
+    security: [
+      l(
+        'The risk tag comes first. Anything that changes the system or can lose data says so before you run it, and the "Change" cards tell you to make a restore point.',
+        'وسم الخطورة يأتي أولًا. أي أمر يغيّر النظام أو قد يفقدك بيانات يقول ذلك قبل أن تشغّله، وبطاقات «يغيّر النظام» تطلب منك إنشاء نقطة استعادة.',
+      ),
+      l(
+        'The health-check script changes nothing on the PC. It only writes its own reports and snapshots, and deletes only its own files older than 90 days.',
+        'سكربت الفحص الصحي لا يغيّر شيئًا في الجهاز. يكتب تقاريره ولقطاته فقط، ويحذف ملفاته هو فقط إذا تجاوز عمرها 90 يومًا.',
+      ),
+      l(
+        'The script is served as a plain-text download, so a browser never runs it. The page also sends no data anywhere: a strict Content-Security-Policy with connect-src and form-action locked down, no framing, nosniff, and camera, microphone and location blocked.',
+        'يُقدَّم السكربت كملف نصي للتنزيل فلا يشغّله المتصفح. والصفحة لا ترسل أي بيانات: سياسة أمان محتوى صارمة تقيّد connect-src وform-action، ومنع التضمين، وnosniff، وحجب الكاميرا والميكروفون والموقع.',
+      ),
+    ],
+    statusNote: l(
+      'Live since 11.2026, version 1.1.0. The commands are written from documentation and can differ slightly between Windows builds, and the site says so. The command cards are drawn by JavaScript, so they need it switched on.',
+      'متاح منذ 11.2026، الإصدار 1.1.0. الأوامر مكتوبة من التوثيق الرسمي وقد تختلف قليلًا بين إصدارات ويندوز، والموقع يذكر ذلك. وبطاقات الأوامر ترسمها JavaScript، فتحتاج إلى تفعيلها.',
+    ),
+    tags: ['PowerShell', 'Windows', 'Event logs', 'JavaScript', 'Python', 'Vercel'],
+    shipped: [
+      l('13 chapters, 70 sections, 189 command cards', '13 فصلًا و70 قسمًا و189 بطاقة أوامر'),
+      l('8 symptom playbooks', '8 مسارات حسب العَرَض'),
+      l('Filter, Ctrl K palette and risk, shell and admin filters', 'تصفية ولوحة Ctrl K وفلاتر الخطورة والصدفة والمسؤول'),
+      l('Copy buttons, card links and saved progress', 'أزرار نسخ وروابط للبطاقات وتقدّم محفوظ'),
+      l('Daily health-check script with change detection', 'سكربت فحص صحي يومي مع كشف التغييرات'),
+      l('52-page printable PDF built from the same data', 'ملف PDF للطباعة من 52 صفحة مبني من البيانات نفسها'),
     ],
   },
   {
@@ -431,9 +498,10 @@ export const stack: readonly StackGroup[] = [
     id: 'languages',
     group: l('Languages', 'لغات البرمجة'),
     items: [
-      { name: 'Python', usedIn: ['studio', 'prompt', 'assas'] },
+      { name: 'Python', usedIn: ['studio', 'prompt', 'assas', 'windows'] },
       { name: 'TypeScript', usedIn: ['kanz'] },
-      { name: 'JavaScript', usedIn: ['prompt'] },
+      { name: 'JavaScript', usedIn: ['prompt', 'windows'] },
+      { name: 'PowerShell', usedIn: ['windows'] },
       { name: 'SQL' },
     ],
   },
@@ -461,7 +529,7 @@ export const stack: readonly StackGroup[] = [
       { name: 'Docker', usedIn: ['assas'] },
       { name: 'Git' },
       { name: 'GitHub' },
-      { name: 'Vercel', usedIn: ['kanz', 'prompt'] },
+      { name: 'Vercel', usedIn: ['kanz', 'prompt', 'windows'] },
       { name: 'Ollama', usedIn: ['studio'] },
       { name: 'LaTeX', usedIn: ['studio'] },
       { name: 'Claude' },
@@ -667,6 +735,7 @@ export const ui = {
     proof: l('Work you can check', 'أعمال يمكنك الاطّلاع عليها'),
     proofs: [
       { id: 'case-kanz', text: l('Shipped a live product end to end', 'أطلقت منتجًا حيًّا من البداية إلى النهاية'), name: 'Kanz' },
+      { id: 'case-windows', text: l('Wrote a 189-command Windows troubleshooting manual with risk labels', 'ألّفت دليلًا من 189 أمرًا لإصلاح ويندوز مع وسوم للخطورة'), name: 'Windows Field Manual' },
       { id: 'case-prompt', text: l('Built a prompt security scanner mapped to OWASP for LLMs', 'بنيت ماسحًا أمنيًا للأوامر مربوطًا بـ OWASP للنماذج اللغوية'), name: 'Prompt Engine' },
       { id: 'case-studio', text: l('Built an offline AI tool with a real security model', 'بنيت أداة ذكاء اصطناعي تعمل دون اتصال بنموذج أمان حقيقي'), name: 'Resume Studio' },
       { id: 'case-assas', text: l('Building a codebase security scanner', 'أبني ماسحًا أمنيًا لقواعد الشيفرة'), name: 'ASSAS' },
@@ -697,8 +766,8 @@ export const ui = {
   meta: {
     title: l('Fouad Barkaoui · SOC analyst & fullstack developer', 'فؤاد البركاوي · محلّل SOC ومطوّر ويب متكامل'),
     description: l(
-      'Fouad Barkaoui, a security-minded builder from Morocco, open to SOC analyst and fullstack roles. Projects: Kanz, Resume Studio and ASSAS.',
-      'فؤاد البركاوي، مطوّر من المغرب يفكّر بعقلية أمنية، ومتاح لأدوار محلّل SOC والتطوير المتكامل. المشاريع: كنز وResume Studio وASSAS.',
+      'Fouad Barkaoui, a security-minded builder from Morocco, open to SOC analyst and fullstack roles. Projects: Kanz, Windows Field Manual, Prompt Engine, Resume Studio and ASSAS.',
+      'فؤاد البركاوي، مطوّر من المغرب يفكّر بعقلية أمنية، ومتاح لأدوار محلّل SOC والتطوير المتكامل. المشاريع: كنز وWindows Field Manual وPrompt Engine وResume Studio وASSAS.',
     ),
   },
 } as const;
@@ -742,6 +811,27 @@ export const diagrams: Record<Project['id'], Diagram> = {
     ],
     links: [l('sync', 'مزامنة')],
     foot: l('Hosted on Vercel · built with Claude Code', 'مستضاف على Vercel · مبنيّ بمساعدة Claude Code'),
+  },
+  windows: {
+    lanes: [
+      {
+        label: l('One source file', 'ملف مصدر واحد'),
+        nodes: [
+          { title: l('Content data', 'بيانات المحتوى'), items: [l('13 chapters · 189 cards', '13 فصلًا · 189 بطاقة'), l('8 playbooks · plan · tables', '8 مسارات · خطة · جداول')], accent: true },
+          { title: l('Risk tags', 'وسوم الخطورة'), items: [l('Read-only · Change · Danger', 'للقراءة · تغيير · خطر'), l('Admin · Core 22', 'مسؤول · Core 22')] },
+        ],
+      },
+      {
+        label: l('What it produces', 'ما ينتجه'),
+        nodes: [
+          { title: l('Web manual', 'دليل الويب'), items: [l('filter · Ctrl K palette', 'تصفية · لوحة Ctrl K'), l('copy · links · saved progress', 'نسخ · روابط · تقدّم محفوظ')] },
+          { title: l('Printable PDF', 'ملف PDF للطباعة'), items: [l('52 pages A4', '52 صفحة A4'), 'WeasyPrint'] },
+          { title: l('Health script', 'سكربت الفحص'), items: ['PC-HealthCheck.ps1', l('read-only · change detection', 'للقراءة فقط · كشف التغييرات')], accent: true },
+        ],
+      },
+    ],
+    links: [l('builds', 'يُنتج')],
+    foot: l('Plain HTML, CSS and JavaScript · no build step · static on Vercel', 'HTML وCSS وJavaScript خالصة · دون خطوة بناء · موقع ثابت على Vercel'),
   },
   prompt: {
     frame: l('Your browser: the prompt is never sent anywhere', 'متصفحك: الأمر لا يُرسَل إلى أي مكان'),
@@ -880,6 +970,53 @@ export const kanzScreens = [
     alt: {
       en: 'The "Here\'s what\'s in Kanz" tour dialog, with tabs for Start here, Free tools, Pro, Coming next and Your ideas.',
       ar: 'نافذة جولة «إليك ما في كنز»، مع تبويبات ابدأ من هنا والأدوات المجانية وPro والقادم وأفكارك.',
+    },
+  },
+] satisfies readonly Screen[];
+
+/* ── Windows Field Manual, the live site (src/assets/windows) ─────────── */
+
+export const windowsScreens = [
+  {
+    id: 'windows-home' as const,
+    wide: true,
+    caption: { en: 'Home: 189 commands, 13 chapters, 8 playbooks', ar: 'الرئيسية: 189 أمرًا و13 فصلًا و8 مسارات' },
+    alt: {
+      en: 'Windows Engineer Field Manual home page: a filter box, risk and shell filters, the 13 chapters in the sidebar, a sample elevated PowerShell window, counts of 13 chapters, 70 sections, 189 command cards and 8 playbooks, and the Read-only, Changes system, Danger and Admin legend.',
+      ar: 'الصفحة الرئيسية لـ Windows Engineer Field Manual: مربع تصفية وفلاتر الخطورة والصدفة، والفصول الثلاثة عشر في الشريط الجانبي، ونافذة PowerShell مرفوعة الصلاحيات كمثال، وأعداد 13 فصلًا و70 قسمًا و189 بطاقة و8 مسارات، ومفتاح الوسوم: للقراءة فقط ويغيّر النظام وخطر ومسؤول.',
+    },
+  },
+  {
+    id: 'windows-card' as const,
+    wide: true,
+    caption: { en: 'Command cards: risk tag, what it does, pro move', ar: 'بطاقات الأوامر: وسم الخطورة وما يفعله ونصيحة محترف' },
+    alt: {
+      en: 'Chapter 02, Reliability and Crash Forensics: cards for crash triage, hardware-reported errors and "Who restarted my PC?", each with the command, a Copy button, Read-only and Core 22 tags, a "What it does" line and a "Pro move" line.',
+      ar: 'الفصل 02، الموثوقية وتحليل الأعطال: بطاقات لفرز الأعطال وأخطاء العتاد و«من أعاد تشغيل جهازي؟»، كل منها مع الأمر وزر نسخ ووسمَي للقراءة فقط وCore 22 وسطر «ما يفعله» وسطر «نصيحة محترف».',
+    },
+  },
+  {
+    id: 'windows-playbook' as const,
+    caption: { en: 'Start from a symptom', ar: 'ابدأ من العَرَض' },
+    alt: {
+      en: 'Eight symptom playbooks as cards, with "Blue screens or random reboots" open to show its ordered steps through the cards, starting with crash triage.',
+      ar: 'ثمانية مسارات حسب العَرَض على شكل بطاقات، ومسار «شاشات زرقاء أو إعادة تشغيل عشوائية» مفتوح ليُظهر خطواته المرتّبة عبر البطاقات، تبدأ بفرز الأعطال.',
+    },
+  },
+  {
+    id: 'windows-palette' as const,
+    caption: { en: 'Ctrl K: jump to a card or an event ID', ar: 'Ctrl K: انتقل إلى بطاقة أو رقم حدث' },
+    alt: {
+      en: 'The command palette with "4625" typed: it finds the event ID entry for logon success and failure, and the card "Failed and successful logons".',
+      ar: 'لوحة الأوامر وقد كُتب فيها «4625»: تجد مدخل رقم الحدث لنجاح الدخول وفشله، وبطاقة «عمليات الدخول الناجحة والفاشلة».',
+    },
+  },
+  {
+    id: 'windows-mobile' as const,
+    caption: { en: 'On a phone, in dark and light', ar: 'على الهاتف، داكنًا وفاتحًا' },
+    alt: {
+      en: 'Two phone screens side by side: the dark home page with the three start buttons, and a light-theme command card with the code block, tags and notes.',
+      ar: 'شاشتا هاتف جنبًا إلى جنب: الصفحة الرئيسية الداكنة مع أزرار البدء الثلاثة، وبطاقة أوامر بالسمة الفاتحة مع كتلة الشيفرة والوسوم والملاحظات.',
     },
   },
 ] satisfies readonly Screen[];
