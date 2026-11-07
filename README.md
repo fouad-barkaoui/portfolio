@@ -45,6 +45,8 @@ npm run preview   # serve dist/
 | Stickers (files, credits, license) | `src/assets/stickers/` · component in `src/components/Sticker.tsx` |
 | Scroll reveals | `src/lib/reveal.ts` (mark an element with `data-reveal="up"`, `pop`, `wipe`…) |
 | Moving band of roles | `src/components/Marquee.tsx` |
+| Crossing tape before Contact | `src/components/Tape.tsx` (both bands share `src/lib/useScrollMarquee.ts`) |
+| Animated dividers (signal on rules, scanner on hatch bands) | `Rule` and `Hatch` in `src/components/primitives.tsx`, styles under "Between sections" in `index.css` |
 
 Change content only in `content.ts`; layout never needs touching.
 

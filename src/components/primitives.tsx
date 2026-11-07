@@ -4,19 +4,29 @@ import { identity, ui, type L } from '@/content/content';
 import { useLang } from '@/lib/i18n';
 import { describeGap, tzOffsetMinutes, useNow } from '@/lib/time';
 
-/** Dashed rule across the page with plus marks where it meets the frame. */
+/**
+ * Dashed rule across the page with plus marks where it meets the frame. It
+ * draws itself in from the middle, and a lime signal runs along it as you
+ * scroll past.
+ */
 export function Rule(): JSX.Element {
   return (
-    <div className="rule" aria-hidden>
+    <div className="rule" aria-hidden data-reveal="rule">
       <i className="plus" data-side="start" />
       <i className="plus" data-side="end" />
+      <span className="rule-track">
+        <i className="rule-pulse" />
+      </span>
     </div>
   );
 }
 
-/** Hatched band between two dashed lines, edge to edge. */
+/**
+ * Hatched band between two dashed lines, edge to edge. It unrolls from the
+ * middle, its hatching slides with scroll, and a lime scanner sweeps across.
+ */
 export function Hatch(): JSX.Element {
-  return <div className="hatch" aria-hidden />;
+  return <div className="hatch" aria-hidden data-reveal="hatch" />;
 }
 
 /** Handwritten aside in the margin with a curved arrow. Wide screens only. */

@@ -1,9 +1,8 @@
 import { Pause, Play } from 'lucide-react';
-import { Fragment, useEffect, useRef, useState } from 'react';
+import { Fragment, useRef, useState } from 'react';
 import { identity, ui } from '@/content/content';
 import { useLang } from '@/lib/i18n';
-import { prefersReducedMotion } from '@/lib/motion';
-import { onScrollVelocity } from '@/lib/scroll';
+import { useScrollMarquee } from '@/lib/useScrollMarquee';
 import { StickerDot, type StickerName } from './Sticker';
 
 /** One sticker after each role, in this order. */
@@ -22,51 +21,14 @@ const COPIES = 3;
 export function Marquee(): JSX.Element {
   const { t } = useLang();
   const [stopped, setStopped] = useState(false);
-  const track = useRef<HTMLDivElement>(null);
   const band = useRef<HTMLDivElement>(null);
-  const stoppedRef = useRef(false);
-  stoppedRef.current = stopped;
-
-  useEffect(() => {
-    const el = track.current;
-    const host = band.current;
-    if (!el || !host || prefersReducedMotion()) return;
-
-    // Off screen: let it rest.
-    const io = new IntersectionObserver(([e]) => {
-      if (e) host.toggleAttribute('data-offscreen', !e.isIntersecting);
-    });
-    io.observe(host);
-
-    let dir = 1;
-    let boost = 0;
-    let frame = 0;
-    const anim = (): Animation | undefined => el.getAnimations().find((a) => a instanceof CSSAnimation && a.animationName.startsWith('marquee'));
-    const tick = (): void => {
-      boost *= 0.9;
-      const a = anim();
-      if (a) a.playbackRate = dir * (1 + boost);
-      frame = boost > 0.02 ? requestAnimationFrame(tick) : 0;
-    };
-    const off = onScrollVelocity((v) => {
-      if (stoppedRef.current || Math.abs(v) < 0.2) return;
-      dir = v > 0 ? 1 : -1;
-      boost = Math.min(5, Math.max(boost, Math.abs(v) * 0.35));
-      if (!frame) frame = requestAnimationFrame(tick);
-    });
-
-    return () => {
-      off();
-      io.disconnect();
-      cancelAnimationFrame(frame);
-    };
-  }, []);
+  useScrollMarquee(band, stopped);
 
   const roles = identity.roles.map((r) => t(r));
   return (
     <div ref={band} className="marquee" data-stopped={stopped || undefined}>
       <div className="marquee-view" aria-hidden>
-        <div ref={track} className="marquee-track">
+        <div className="marquee-track">
           {Array.from({ length: COPIES }, (_, c) => (
             <div key={c} className="marquee-group">
               {roles.map((r, k) => (

@@ -770,6 +770,7 @@ export const ui = {
   marquee: {
     pause: l('Pause the moving band', 'إيقاف الشريط المتحرّك'),
     play: l('Play the moving band', 'تشغيل الشريط المتحرّك'),
+    pauseTape: l('Pause the moving tape', 'إيقاف الشريطين المتحرّكين'),
   },
   meta: {
     title: l('Fouad Barkaoui · SOC analyst & fullstack developer', 'فؤاد البركاوي · محلّل SOC ومطوّر ويب متكامل'),

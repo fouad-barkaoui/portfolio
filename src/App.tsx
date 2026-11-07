@@ -11,6 +11,7 @@ import { Hatch, Rule } from './components/primitives';
 import { Projects } from './components/Projects';
 import { ScrollIndex } from './components/ScrollIndex';
 import { SecurityCorner } from './components/SecurityCorner';
+import { Tape } from './components/Tape';
 import { BuiltWith, Stack } from './components/Stack';
 
 const BriefForm = lazy(() => import('./components/BriefForm'));
@@ -78,7 +79,7 @@ function Page(): JSX.Element {
           <SoonPanels />
           <Hatch />
           <Motto />
-          <Rule />
+          <Tape />
           <Contact />
           <Rule />
           <Footer />
