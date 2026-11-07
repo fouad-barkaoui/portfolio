@@ -1,5 +1,5 @@
 import { Check, Copy } from 'lucide-react';
-import { useEffect, useState, type ReactNode } from 'react';
+import { useEffect, useState, type CSSProperties, type ReactNode } from 'react';
 import { identity, ui, type L } from '@/content/content';
 import { useLang } from '@/lib/i18n';
 import { describeGap, tzOffsetMinutes, useNow } from '@/lib/time';
@@ -22,11 +22,11 @@ export function Hatch(): JSX.Element {
 /** Handwritten aside in the margin with a curved arrow. Wide screens only. */
 export function Note({ children }: { children: ReactNode }): JSX.Element {
   return (
-    <span className="note" aria-hidden>
+    <span className="note" aria-hidden data-reveal="note">
       <span className="note-text">{children}</span>
       <svg className="note-arrow" viewBox="0 0 44 40" width="44" height="40">
-        <path d="M6 3c-2 12 2 24 14 29c5 2 11 2 17 0" />
-        <path d="M30 27l7 5l-7 5" />
+        <path d="M6 3c-2 12 2 24 14 29c5 2 11 2 17 0" pathLength={1} />
+        <path d="M30 27l7 5l-7 5" pathLength={1} />
       </svg>
     </span>
   );
@@ -41,29 +41,41 @@ export function Status({ children, tone = 'soon' }: { children: ReactNode; tone?
   );
 }
 
-/** Section heading with its margin note and an optional count. */
+/**
+ * Section heading with its margin note, an optional count, and an optional
+ * sticker that sits just past the end of the title (in either direction).
+ */
 export function SectionHead({
   id,
   note,
   title,
   count,
   sub,
+  sticker,
 }: {
   id: string;
   note: L;
   title: L;
   count?: number;
   sub?: L;
+  sticker?: ReactNode;
 }): JSX.Element {
   const { t } = useLang();
   return (
     <header className="section-head">
       <Note>{t(note)}</Note>
       <h2 id={id} className="section-title">
-        {t(title)}
-        {count !== undefined ? <sup className="count">({count})</sup> : null}
+        <span className="title-text" data-reveal="wipe">
+          {t(title)}
+          {count !== undefined ? <sup className="count">({count})</sup> : null}
+        </span>
+        {sticker ? <span className="title-sticker">{sticker}</span> : null}
       </h2>
-      {sub ? <p className="section-sub">{t(sub)}</p> : null}
+      {sub ? (
+        <p className="section-sub" data-reveal="up" style={{ '--k': 2 } as CSSProperties}>
+          {t(sub)}
+        </p>
+      ) : null}
     </header>
   );
 }

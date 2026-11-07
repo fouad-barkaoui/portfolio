@@ -762,6 +762,14 @@ export const ui = {
     ctaKicker: l('Have an idea?', 'لديك فكرة؟'),
     ctaTitle: l("Let's build it, and build it safe.", 'لنبنِها معًا، وبأمان.'),
     ctaButton: l('Write to me', 'راسلني'),
+    stickers: l('Stickers from', 'الملصقات من'),
+  },
+  stickers: {
+    hint: l('psst, drag me', 'اسحبني'),
+  },
+  marquee: {
+    pause: l('Pause the moving band', 'إيقاف الشريط المتحرّك'),
+    play: l('Play the moving band', 'تشغيل الشريط المتحرّك'),
   },
   meta: {
     title: l('Fouad Barkaoui · SOC analyst & fullstack developer', 'فؤاد البركاوي · محلّل SOC ومطوّر ويب متكامل'),

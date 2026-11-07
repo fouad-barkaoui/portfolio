@@ -1,4 +1,5 @@
 import { ArrowUp, ArrowUpRight, FilePenLine, FileText, Mail } from 'lucide-react';
+import type { CSSProperties } from 'react';
 import { identity, motto, projects, socials, soon, ui, type Social } from '@/content/content';
 import { useLang } from '@/lib/i18n';
 import { useMagnetic } from '@/lib/motion';
@@ -10,6 +11,7 @@ import { BrandIcon, isBrand } from './BrandIcons';
 import { Logo } from './Logo';
 import { SignalField } from './SignalField';
 import { CopyEmail, SectionHead, Status } from './primitives';
+import { Sticker } from './Sticker';
 
 /* ── Experience & Recognition: empty on purpose ──────────────────────── */
 
@@ -18,7 +20,7 @@ function SoonPanel({ id, note, title, text }: { id: string; note: typeof ui.note
   return (
     <section className="soon-col" aria-labelledby={id}>
       <SectionHead id={id} note={note} title={title} />
-      <div className="soon">
+      <div className="soon" data-reveal="up">
         <Status>{t(ui.status.soon)}</Status>
         <p>{t(text)}</p>
       </div>
@@ -53,7 +55,7 @@ export function Motto(): JSX.Element {
         <blockquote className="sr-only">
           {t(motto.lead)} {t(motto.big)}
         </blockquote>
-        <p className="motto-lead" aria-hidden>
+        <p className="motto-lead" aria-hidden data-reveal="up">
           <span className="motto-bubble">
             <i />
             <i />
@@ -62,12 +64,13 @@ export function Motto(): JSX.Element {
           <span className="motto-lead-text">{t(motto.lead)}</span>
         </p>
         <p className="motto-big" aria-hidden>
-          <span className="motto-sel">
+          <Sticker name="flame" size={70} rot={-14} className="stk-motto" drift={-22} delay={520} />
+          <span className="motto-sel" data-reveal="select">
             {t(motto.big)}
             <i className="motto-handle is-start" />
             <i className="motto-handle is-end" />
           </span>
-          <span className="motto-sparks">
+          <span className="motto-sparks" data-reveal="twinkle">
             <Sparkle className="is-a" />
             <Sparkle className="is-b" />
             <Sparkle className="is-c" />
@@ -120,7 +123,8 @@ function SocialTile({ s }: { s: Social }): JSX.Element {
 function HireCard(): JSX.Element {
   const { t } = useLang();
   return (
-    <aside id="hire" className="hire" aria-labelledby="hire-title" tabIndex={-1}>
+    <aside id="hire" className="hire" aria-labelledby="hire-title" tabIndex={-1} data-reveal="up">
+      <Sticker name="eye-splat" size={74} rot={14} className="stk-hire" drift={-14} delay={260} />
       <p className="hire-head">
         <span className="hire-pulse" aria-hidden />
         <span className="mono">{t(ui.hire.badge)}</span>
@@ -192,7 +196,13 @@ export function Contact(): JSX.Element {
     <section id="contact" className="section contact" aria-labelledby="contact-title">
       <div className="contact-grid">
         <div className="contact-main">
-          <SectionHead id="contact-title" note={ui.notes.findMe} title={ui.section.contact} sub={ui.section.contactSub} />
+          <SectionHead
+            id="contact-title"
+            note={ui.notes.findMe}
+            title={ui.section.contact}
+            sub={ui.section.contactSub}
+            sticker={<Sticker name="peace-hand" size={78} rot={12} drift={-18} />}
+          />
           <CopyEmail big />
           <a ref={cta} className="btn btn-primary" href={`mailto:${identity.email}`}>
             <Mail size={17} strokeWidth={1.9} aria-hidden />
@@ -202,10 +212,13 @@ export function Contact(): JSX.Element {
           <HireCard />
         </div>
         <div className="contact-socials">
-          <h3 className="sub-title">{t(ui.section.socials)}</h3>
+          <Sticker name="globe" size={84} rot={-10} className="stk-socials" drift={20} delay={150} float />
+          <h3 className="sub-title" data-reveal="up">
+            {t(ui.section.socials)}
+          </h3>
           <ul className="socials">
-            {socials.map((s) => (
-              <li key={s.id}>
+            {socials.map((s, k) => (
+              <li key={s.id} data-reveal="up" style={{ '--k': k } as CSSProperties}>
                 <SocialTile s={s} />
               </li>
             ))}
@@ -277,6 +290,7 @@ export function Footer(): JSX.Element {
       <SignalField variant="footer" />
 
       <aside className="footer-cta" aria-labelledby="footer-cta-title">
+        <Sticker name="star" size={84} rot={14} className="stk-cta" drift={-10} delay={200} />
         <p className="footer-cta-kicker mono">{t(ui.footer.ctaKicker)}</p>
         <p id="footer-cta-title" className="footer-cta-title">
           {t(ui.footer.ctaTitle)}
@@ -341,6 +355,12 @@ export function Footer(): JSX.Element {
               © {new Date().getFullYear()}
               <br />
               {t(ui.footer.rights)}
+            </p>
+            <p className="footer-credit">
+              {t(ui.footer.stickers)}{' '}
+              <a href="https://stickitupx.vercel.app/stickers" target="_blank" rel="noopener noreferrer" dir="ltr">
+                Stick It Up
+              </a>
             </p>
           </div>
         </div>

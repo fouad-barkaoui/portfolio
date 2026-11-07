@@ -1,7 +1,9 @@
 import { Activity, Crosshair, Radar, Terminal, type LucideIcon } from 'lucide-react';
 import { attackTactics, security, ui } from '@/content/content';
 import { useLang } from '@/lib/i18n';
+import type { CSSProperties } from 'react';
 import { SectionHead } from './primitives';
+import { Sticker } from './Sticker';
 
 const ICONS: Record<string, LucideIcon> = { soc: Activity, cti: Radar, attack: Crosshair, kali: Terminal };
 
@@ -9,13 +11,19 @@ export function SecurityCorner(): JSX.Element {
   const { t } = useLang();
   return (
     <section id="security" className="section" aria-labelledby="security-title">
-      <SectionHead id="security-title" note={ui.notes.practise} title={ui.section.security} sub={ui.section.securitySub} />
+      <SectionHead
+        id="security-title"
+        note={ui.notes.practise}
+        title={ui.section.security}
+        sub={ui.section.securitySub}
+        sticker={<Sticker name="pip-detective" size={88} rot={8} drift={20} />}
+      />
 
       <ul className="sec-grid">
-        {security.map((s) => {
+        {security.map((s, k) => {
           const Icon = ICONS[s.id] ?? Activity;
           return (
-            <li key={s.id} className="sec-card card" data-id={s.id}>
+            <li key={s.id} className="sec-card card" data-id={s.id} data-reveal="up" style={{ '--k': k } as CSSProperties}>
               <div className="sec-top">
                 <span className="sec-icon" aria-hidden>
                   <Icon size={18} strokeWidth={1.7} />
@@ -37,9 +45,10 @@ export function SecurityCorner(): JSX.Element {
       </ul>
 
       <figure className="attack" aria-labelledby="attack-cap">
+        <Sticker name="cosmic-eye" size={92} rot={-9} className="stk-attack" drift={-24} delay={200} />
         <ol className="attack-row" dir="ltr">
           {attackTactics.map((tac, k) => (
-            <li key={tac} className="attack-cell">
+            <li key={tac} className="attack-cell" data-reveal="scan" style={{ '--k': k } as CSSProperties}>
               <span className="mono attack-id">{String(k + 1).padStart(2, '0')}</span>
               <span className="attack-name">{tac}</span>
             </li>

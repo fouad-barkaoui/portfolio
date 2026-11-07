@@ -43,6 +43,7 @@ import { Diagram } from './Diagram';
 import { Lightbox, type LightboxShot } from './Lightbox';
 import { Picture } from './Picture';
 import { SectionHead, Status } from './primitives';
+import { Sticker } from './Sticker';
 
 type ShotId =
   | (typeof kanzScreens)[number]['id']
@@ -466,7 +467,13 @@ export function Projects(): JSX.Element {
 
   return (
     <section id="work" className="section" aria-labelledby="work-title">
-      <SectionHead id="work-title" note={ui.notes.building} title={ui.section.projects} count={projects.length} />
+      <SectionHead
+        id="work-title"
+        note={ui.notes.building}
+        title={ui.section.projects}
+        count={projects.length}
+        sticker={<Sticker name="kuro-rocket" size={86} rot={-12} drift={-20} float />}
+      />
       <div className="carousel" aria-roledescription={t(ui.project.carousel)}>
         <div ref={bar} className="carousel-bar">
           <div ref={rail} className="carousel-tabs" role="tablist" aria-label={t(ui.section.projects)} onKeyDown={onTabsKey}>

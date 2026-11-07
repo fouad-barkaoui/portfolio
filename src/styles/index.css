@@ -3149,6 +3149,18 @@ a.footer-link:hover svg {
 :lang(ar) .footer-copy .mono {
   letter-spacing: 0;
 }
+.footer-credit {
+  font-size: 12px;
+  line-height: 1.5;
+}
+.footer-credit a {
+  color: var(--ink);
+  text-decoration: underline dashed var(--line-2);
+  text-underline-offset: 3px;
+}
+.footer-credit a:hover {
+  text-decoration-color: var(--accent);
+}
 
 /* Socials row */
 .footer-socials {
@@ -4265,6 +4277,630 @@ html.is-locked {
   }
 }
 
+/* ── Stickers ─────────────────────────────────────────────────────────────
+   Die-cut vinyl stickers (Stick It Up pack, see assets/stickers/LICENSE.md).
+   .sticker places it and drifts with scroll, .sticker-float bobs, and
+   .sticker-body takes the pointer: slap-in, tilt, sheen, drag, wiggle.     */
+
+.sticker {
+  --scale: 1;
+  position: absolute;
+  z-index: 4;
+  width: calc(var(--w) * var(--scale));
+  pointer-events: none;
+}
+@media (max-width: 639px) {
+  .sticker {
+    --scale: 0.64;
+  }
+}
+.sticker[data-active] {
+  z-index: 40;
+}
+.sticker-float {
+  display: block;
+}
+.sticker[data-float] .sticker-float {
+  animation: sticker-bob 5.8s ease-in-out infinite alternate;
+}
+.sticker-body {
+  position: relative;
+  display: block;
+  rotate: var(--rot);
+  transform: perspective(520px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transition:
+    transform 0.4s var(--ease-out),
+    scale 0.35s var(--ease-out),
+    translate 0.55s var(--ease-out);
+  pointer-events: auto;
+  cursor: grab;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+}
+@media not ((hover: hover) and (pointer: fine)) {
+  .sticker-body {
+    cursor: default;
+  }
+}
+.sticker-body img {
+  display: block;
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 2px 1.5px rgb(0 0 0 / 0.35)) drop-shadow(0 10px 14px rgb(0 0 0 / 0.28));
+  transition: filter 0.35s var(--ease-out);
+  pointer-events: none;
+}
+:root[data-theme='light'] .sticker-body img {
+  filter: drop-shadow(0 1.5px 1px rgb(0 0 0 / 0.18)) drop-shadow(0 8px 12px rgb(0 0 0 / 0.14));
+}
+/* Vinyl sheen, cut to the sticker's own outline. */
+.sticker-gloss {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  background: linear-gradient(
+    112deg,
+    transparent calc(var(--gx, 50%) - 34%),
+    rgb(255 255 255 / 0.62) var(--gx, 50%),
+    transparent calc(var(--gx, 50%) + 34%)
+  );
+  mix-blend-mode: soft-light;
+  -webkit-mask: var(--mask) center / contain no-repeat;
+  mask: var(--mask) center / contain no-repeat;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+@media (hover: hover) and (pointer: fine) {
+  .sticker-body:hover {
+    scale: 1.07;
+  }
+  .sticker-body:hover img {
+    filter: drop-shadow(0 5px 3px rgb(0 0 0 / 0.3)) drop-shadow(0 18px 24px rgb(0 0 0 / 0.34));
+  }
+  :root[data-theme='light'] .sticker-body:hover img {
+    filter: drop-shadow(0 4px 2px rgb(0 0 0 / 0.16)) drop-shadow(0 16px 20px rgb(0 0 0 / 0.16));
+  }
+  .sticker-body:hover .sticker-gloss {
+    opacity: 1;
+  }
+}
+/* Peeled off and carried around. */
+.sticker-body[data-state='lift'] {
+  scale: 1.14;
+  cursor: grabbing;
+  transition:
+    transform 0.2s var(--ease-out),
+    scale 0.2s var(--ease-out);
+}
+.sticker-body[data-state='lift'] img {
+  filter: drop-shadow(0 10px 6px rgb(0 0 0 / 0.24)) drop-shadow(0 30px 34px rgb(0 0 0 / 0.36));
+}
+.sticker-body[data-state='drop'] img {
+  animation: sticker-drop 0.42s var(--ease-out);
+}
+.sticker-body[data-state='wiggle'] img {
+  animation: sticker-wiggle 0.65s var(--ease-out);
+}
+.sticker-body[data-state='home'] {
+  transition:
+    transform 0.4s var(--ease-out),
+    scale 0.35s var(--ease-out),
+    translate 0.6s cubic-bezier(0.34, 1.4, 0.5, 1);
+}
+
+/* Slapped on: as the hero intro ends, or when it scrolls in. */
+.intro [data-intro='sticker'],
+.sticker-body[data-shown] {
+  animation: sticker-slap 0.72s cubic-bezier(0.3, 0.7, 0.4, 1) var(--d, 0ms) backwards;
+}
+.intro [data-intro='sticker'] {
+  animation-delay: calc(1.45s + var(--d, 0ms));
+}
+.intro [data-intro='sticker'] img,
+.sticker-body[data-shown] img {
+  animation: sticker-press 0.72s cubic-bezier(0.3, 0.7, 0.4, 1) var(--d, 0ms) backwards;
+}
+.intro [data-intro='sticker'] img {
+  animation-delay: calc(1.45s + var(--d, 0ms));
+}
+
+@keyframes sticker-slap {
+  0% {
+    opacity: 0;
+    scale: 1.9;
+    rotate: calc(var(--rot) + 18deg);
+  }
+  48% {
+    opacity: 1;
+    scale: 0.93;
+    rotate: calc(var(--rot) - 3deg);
+  }
+  72% {
+    scale: 1.035;
+  }
+  100% {
+    scale: 1;
+    rotate: var(--rot);
+  }
+}
+@keyframes sticker-press {
+  0% {
+    filter: drop-shadow(0 18px 10px rgb(0 0 0 / 0.18)) drop-shadow(0 44px 40px rgb(0 0 0 / 0.3));
+  }
+}
+@keyframes sticker-drop {
+  40% {
+    scale: 1.05 0.95;
+  }
+}
+@keyframes sticker-wiggle {
+  20% {
+    rotate: -13deg;
+  }
+  40% {
+    rotate: 10deg;
+  }
+  60% {
+    rotate: -6deg;
+  }
+  80% {
+    rotate: 3deg;
+  }
+}
+@keyframes sticker-bob {
+  from {
+    translate: 0 -4px;
+    rotate: -2deg;
+  }
+  to {
+    translate: 0 5px;
+    rotate: 2.5deg;
+  }
+}
+@keyframes sticker-drift {
+  from {
+    translate: 0 var(--drift);
+  }
+  to {
+    translate: 0 calc(var(--drift) * -1);
+  }
+}
+
+/* Placements. Offsets shrink on phones so nothing hangs off the screen. */
+.stk-hero-nazar {
+  bottom: 34px;
+  inset-inline-end: -50px;
+}
+.stk-hero-spark {
+  top: -36px;
+  inset-inline-start: -36px;
+}
+.stk-facts {
+  bottom: -34px;
+  inset-inline-end: -28px;
+}
+.how {
+  position: relative;
+}
+.stk-how {
+  top: -46px;
+  inset-inline-start: 132px;
+}
+.attack {
+  position: relative;
+}
+.stk-attack {
+  top: -40px;
+  inset-inline-end: -18px;
+}
+.stk-motto {
+  top: -48px;
+  inset-inline-start: -44px;
+  z-index: 3;
+}
+.contact-socials {
+  position: relative;
+}
+.stk-socials {
+  top: -52px;
+  inset-inline-end: -8px;
+}
+.stk-hire {
+  top: -32px;
+  inset-inline-end: -20px;
+}
+.stk-cta {
+  top: 14px;
+  inset-inline-end: 16px;
+}
+@media (max-width: 639px) {
+  .stk-hero-nazar {
+    bottom: 22px;
+    inset-inline-end: -14px;
+  }
+  .stk-hero-spark {
+    top: -24px;
+    inset-inline-start: -10px;
+  }
+  .stk-facts {
+    bottom: -26px;
+    inset-inline-end: -6px;
+  }
+  .stk-how {
+    top: -32px;
+    inset-inline-start: 104px;
+  }
+  .stk-attack {
+    top: -34px;
+    inset-inline-end: -4px;
+  }
+  .stk-motto {
+    top: -32px;
+    inset-inline-start: -10px;
+  }
+  .stk-socials {
+    top: -36px;
+    inset-inline-end: 0;
+  }
+  .stk-hire {
+    top: -24px;
+    inset-inline-end: -6px;
+  }
+  .stk-cta {
+    top: 12px;
+    inset-inline-end: 12px;
+  }
+}
+/* A sticker that rides just past the end of a section title. */
+.title-text {
+  display: inline-block;
+}
+.title-sticker {
+  position: relative;
+  display: inline-block;
+  width: 0;
+  height: 1em;
+  vertical-align: top;
+}
+.title-sticker .sticker {
+  top: -0.78em;
+  inset-inline-start: 0.3em;
+}
+
+/* "psst, drag me" — only where there is a mouse and room for it. */
+.sticker-hint {
+  position: absolute;
+  z-index: 5;
+  top: calc(100% + 16px);
+  inset-inline-end: 22px;
+  display: none;
+  align-items: flex-end;
+  gap: 2px;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+.sticker-hint .note-text {
+  font-size: 22px;
+  transform: rotate(-4deg);
+  transform-origin: center;
+}
+[dir='rtl'] .sticker-hint .note-text {
+  transform: rotate(4deg);
+}
+[dir='rtl'] .sticker-hint .note-arrow {
+  transform: scaleX(-1);
+}
+.intro .sticker-hint {
+  animation: fade-up 0.8s 2.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.portrait-frame:has(.sticker[data-moved]) .sticker-hint {
+  opacity: 0;
+}
+@media (hover: hover) and (pointer: fine) and (min-width: 1100px) {
+  .sticker-hint {
+    display: flex;
+  }
+}
+
+/* Small inline sticker (band separators). */
+.sticker-dot {
+  display: block;
+  flex: none;
+  width: auto;
+  height: clamp(30px, 3.6vw, 46px);
+  rotate: var(--rot);
+  filter: drop-shadow(0 2px 1.5px rgb(0 0 0 / 0.3)) drop-shadow(0 6px 8px rgb(0 0 0 / 0.22));
+}
+
+/* ── Marquee band ─────────────────────────────────────────────────────── */
+
+.marquee {
+  position: relative;
+}
+.marquee-view {
+  position: relative;
+  margin-inline: calc(50% - 50vw);
+  overflow: hidden;
+  border-block: 1px dashed var(--line-2);
+  background:
+    repeating-linear-gradient(-45deg, rgb(var(--tint) / 0.035) 0 1px, transparent 1px 8px),
+    color-mix(in oklab, var(--bg-2) 70%, transparent);
+  -webkit-mask: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+  mask: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+}
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 64s linear infinite;
+}
+[dir='rtl'] .marquee-track {
+  animation-name: marquee-rtl;
+}
+.marquee[data-offscreen] .marquee-track,
+.marquee[data-stopped] .marquee-track {
+  animation-play-state: paused;
+}
+@media (hover: hover) and (pointer: fine) {
+  .marquee-view:hover .marquee-track {
+    animation-play-state: paused;
+  }
+}
+.marquee-group {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: clamp(18px, 2.4vw, 30px);
+  padding-block: clamp(16px, 2.2vw, 24px);
+  padding-inline-end: clamp(18px, 2.4vw, 30px);
+}
+.marquee-word {
+  flex: none;
+  font-family: var(--font-display);
+  font-size: clamp(22px, 3.2vw, 38px);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  white-space: nowrap;
+  color: var(--ink);
+}
+.marquee-word[data-tone='outline'] {
+  color: transparent;
+  -webkit-text-stroke: 1.2px var(--ink);
+}
+:lang(ar) .marquee-word {
+  font-family: var(--font-sans);
+  letter-spacing: 0;
+}
+:lang(ar) .marquee-word[data-tone='outline'] {
+  color: var(--muted);
+  -webkit-text-stroke: 0;
+}
+.marquee-toggle {
+  position: absolute;
+  top: 50%;
+  inset-inline-end: max(8px, calc(var(--pad) - 18px));
+  z-index: 2;
+  width: 32px;
+  height: 32px;
+  translate: 0 -50%;
+  background: var(--bg);
+}
+@keyframes marquee {
+  to {
+    translate: calc(-100% / 3) 0;
+  }
+}
+@keyframes marquee-rtl {
+  to {
+    translate: calc(100% / 3) 0;
+  }
+}
+
+/* ── Scroll reveals (lib/reveal.ts) ───────────────────────────────────────
+   Hidden only after the script has seen the element below the fold
+   (data-wait); it plays once when it scrolls in (data-shown).             */
+
+.has-reveal [data-reveal][data-wait] {
+  opacity: 0;
+}
+[data-reveal='up'][data-shown] {
+  animation: reveal-up 0.9s var(--ease-out) calc(var(--k, 0) * 80ms) backwards;
+}
+[data-reveal='pop'][data-shown] {
+  animation: reveal-pop 0.55s cubic-bezier(0.3, 1.45, 0.5, 1) calc(var(--k, 0) * 40ms) backwards;
+}
+[data-reveal='wipe'][data-shown] {
+  animation: reveal-wipe 1s cubic-bezier(0.77, 0, 0.18, 1) backwards;
+}
+[dir='rtl'] [data-reveal='wipe'][data-shown] {
+  animation-name: reveal-wipe-rtl;
+}
+[data-reveal='scan'][data-shown] {
+  animation: reveal-scan 0.7s var(--ease-out) calc(var(--k, 0) * 45ms) backwards;
+}
+.note .note-arrow path {
+  stroke-dasharray: 1;
+}
+.note[data-shown] .note-text {
+  animation: reveal-write 0.9s cubic-bezier(0.65, 0, 0.35, 1) 0.15s backwards;
+}
+[dir='rtl'] .note[data-shown] .note-text {
+  animation-name: reveal-write-rtl;
+}
+.note[data-shown] .note-arrow path {
+  animation: reveal-draw 0.6s var(--ease-out) 0.85s backwards;
+}
+.note[data-shown] .note-arrow path + path {
+  animation-delay: 1.3s;
+  animation-duration: 0.3s;
+}
+.motto-sel[data-shown] {
+  animation: reveal-select 1.1s cubic-bezier(0.65, 0, 0.35, 1) 0.15s backwards;
+}
+[dir='rtl'] .motto-sel[data-shown] {
+  animation-name: reveal-select-rtl;
+}
+.motto-sparks svg {
+  animation: twinkle 3.2s ease-in-out infinite;
+}
+.motto-sparks svg:nth-child(2) {
+  animation-delay: -1.1s;
+  animation-duration: 2.6s;
+}
+.motto-sparks svg:nth-child(3) {
+  animation-delay: -2s;
+  animation-duration: 3.8s;
+}
+.motto-sparks[data-shown] svg {
+  animation:
+    reveal-pop 0.5s cubic-bezier(0.3, 1.6, 0.5, 1) 1.15s backwards,
+    twinkle 3.2s ease-in-out 1.7s infinite;
+}
+.motto-sparks[data-shown] svg:nth-child(2) {
+  animation-delay: 1.27s, 1.9s;
+}
+.motto-sparks[data-shown] svg:nth-child(3) {
+  animation-delay: 1.39s, 2.2s;
+}
+
+@keyframes reveal-up {
+  from {
+    opacity: 0;
+    translate: 0 26px;
+  }
+}
+@keyframes reveal-pop {
+  from {
+    opacity: 0;
+    scale: 0.6;
+  }
+}
+@keyframes reveal-wipe {
+  from {
+    clip-path: inset(-0.3em 100% -0.3em -0.1em);
+    translate: 0 0.18em;
+  }
+  to {
+    clip-path: inset(-0.3em -0.6em -0.3em -0.1em);
+  }
+}
+@keyframes reveal-wipe-rtl {
+  from {
+    clip-path: inset(-0.3em -0.1em -0.3em 100%);
+    translate: 0 0.18em;
+  }
+  to {
+    clip-path: inset(-0.3em -0.1em -0.3em -0.6em);
+  }
+}
+@keyframes reveal-scan {
+  from {
+    opacity: 0;
+    translate: 0 12px;
+    background-color: color-mix(in oklab, var(--accent) 22%, transparent);
+  }
+  60% {
+    opacity: 1;
+    translate: 0 0;
+    background-color: color-mix(in oklab, var(--accent) 10%, transparent);
+  }
+}
+@keyframes reveal-write {
+  from {
+    clip-path: inset(-0.4em 100% -0.4em -0.2em);
+  }
+  to {
+    clip-path: inset(-0.4em -0.2em -0.4em -0.2em);
+  }
+}
+@keyframes reveal-write-rtl {
+  from {
+    clip-path: inset(-0.4em -0.2em -0.4em 100%);
+  }
+  to {
+    clip-path: inset(-0.4em -0.2em -0.4em -0.2em);
+  }
+}
+@keyframes reveal-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+}
+@keyframes reveal-select {
+  from {
+    clip-path: inset(-40px 100% -40px -40px);
+  }
+  to {
+    clip-path: inset(-40px -40px -40px -40px);
+  }
+}
+@keyframes reveal-select-rtl {
+  from {
+    clip-path: inset(-40px -40px -40px 100%);
+  }
+  to {
+    clip-path: inset(-40px -40px -40px -40px);
+  }
+}
+@keyframes twinkle {
+  0%,
+  100% {
+    scale: 1;
+    rotate: 0deg;
+  }
+  50% {
+    scale: 0.78;
+    rotate: 18deg;
+  }
+}
+
+/* Printing or saving as PDF shows everything, revealed or not. */
+@media print {
+  [data-wait] {
+    opacity: 1 !important;
+  }
+}
+
+/* ── Scroll-linked drift (CSS scroll timelines; static where unsupported) ── */
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .sticker {
+      animation: sticker-drift linear both;
+      animation-timeline: view();
+      animation-range: cover;
+    }
+    .hatch::before {
+      animation: hatch-slide linear both;
+      animation-timeline: view();
+      animation-range: cover;
+    }
+    .hatch:nth-of-type(even)::before {
+      animation-direction: reverse;
+    }
+    .hero-figure {
+      animation: hero-drift linear both;
+      animation-timeline: view();
+      animation-range: exit;
+    }
+  }
+}
+@keyframes hatch-slide {
+  from {
+    translate: -56px 0;
+  }
+  to {
+    translate: 56px 0;
+  }
+}
+@keyframes hero-drift {
+  to {
+    translate: 0 72px;
+  }
+}
+
 /* Below-the-fold sections skip layout and paint until they near the
    viewport. Not where margin notes show — they sit outside the box. */
 @media (max-width: 1439px) {
@@ -4279,6 +4915,9 @@ html.is-locked {
 /* ── Reduced motion: nothing moves ────────────────────────────────────── */
 
 @media (prefers-reduced-motion: reduce) {
+  .marquee-toggle {
+    display: none;
+  }
   *,
   *::before,
   *::after {

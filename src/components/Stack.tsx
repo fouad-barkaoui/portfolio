@@ -1,7 +1,9 @@
 import { builtWith, projects, stack, ui } from '@/content/content';
 import { useLang } from '@/lib/i18n';
 import { scrollToId } from '@/lib/scroll';
+import type { CSSProperties } from 'react';
 import { Note, SectionHead } from './primitives';
+import { Sticker } from './Sticker';
 
 const NAMES = Object.fromEntries(projects.map((p) => [p.id, p.name]));
 
@@ -17,15 +19,22 @@ export function Stack(): JSX.Element {
   const { t } = useLang();
   return (
     <section id="stack" className="section" aria-labelledby="stack-title">
-      <SectionHead id="stack-title" note={ui.notes.tools} title={ui.section.stack} />
+      <SectionHead
+        id="stack-title"
+        note={ui.notes.tools}
+        title={ui.section.stack}
+        sticker={<Sticker name="pip-headphones" size={84} rot={-7} drift={-18} float />}
+      />
       <dl className="stack">
         {stack.map((g) => (
           <div key={g.id} className="stack-row">
-            <dt className="mono">{t(g.group)}</dt>
+            <dt className="mono" data-reveal="up">
+              {t(g.group)}
+            </dt>
             <dd>
               <ul>
-                {g.items.map((it) => (
-                  <li key={it.name} className="chip">
+                {g.items.map((it, k) => (
+                  <li key={it.name} className="chip" data-reveal="pop" style={{ '--k': k + 1 } as CSSProperties}>
                     <span>{it.label ? t(it.label) : it.name}</span>
                     {it.usedIn?.map((pid) => (
                       <a
@@ -57,14 +66,14 @@ export function BuiltWith(): JSX.Element {
   return (
     <section className="built" aria-labelledby="built-title">
       <Note>{t(ui.notes.thanks)}</Note>
-      <h2 id="built-title" className="built-title mono">
+      <h2 id="built-title" className="built-title mono" data-reveal="up">
         {t(ui.section.builtWith)}
       </h2>
       <ul className="built-grid">
-        {builtWith.map((b) => {
+        {builtWith.map((b, k) => {
           const logo = logoFor(b.slug);
           return (
-            <li key={b.slug}>
+            <li key={b.slug} data-reveal="up" style={{ '--k': k } as CSSProperties}>
               <a href={b.url} target="_blank" rel="noopener noreferrer" className="built-name" dir="ltr">
                 {logo ? <img src={logo} alt={b.name} className="built-logo" loading="lazy" /> : b.name}
               </a>

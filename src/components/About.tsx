@@ -1,9 +1,10 @@
 import { Briefcase, Clock, Languages, Mail, MapPin } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type CSSProperties } from 'react';
 import { bio, howIWork, identity, ui } from '@/content/content';
 import { Rich, useLang } from '@/lib/i18n';
 import { greetingFor } from '@/lib/time';
 import { CopyEmail, LocalTime, Note } from './primitives';
+import { Sticker } from './Sticker';
 
 function MoroccoFlag(): JSX.Element {
   return (
@@ -43,22 +44,27 @@ export function About(): JSX.Element {
         <div className="about-main">
           <header className="section-head">
             <Note>{t(ui.notes.sayHi)}</Note>
-            <p className="eyebrow mono">{t(ui.section.about)}</p>
+            <p className="eyebrow mono" data-reveal="up">
+              {t(ui.section.about)}
+            </p>
             <h2 id="about-title" className="greeting">
-              {t(greeting)}
+              <span className="title-text" data-reveal="wipe">
+                {t(greeting)}
+              </span>
             </h2>
           </header>
           <div className="bio">
             {bio.map((p, k) => (
-              <p key={k}>
+              <p key={k} data-reveal="up" style={{ '--k': k + 1 } as CSSProperties}>
                 <Rich text={t(p)} />
               </p>
             ))}
           </div>
         </div>
 
-        <aside className="facts card" aria-label={t(ui.notes.basics)}>
+        <aside className="facts card" aria-label={t(ui.notes.basics)} data-reveal="up" style={{ '--k': 2 } as CSSProperties}>
           <Note>{t(ui.notes.basics)}</Note>
+          <Sticker name="kuro-laptop" size={108} rot={9} className="stk-facts" drift={18} />
           <dl>
             {facts.map((f) => {
               const Icon = f.icon;
@@ -77,10 +83,13 @@ export function About(): JSX.Element {
       </div>
 
       <div className="how">
-        <h3 className="how-title">{t(ui.section.howIWork)}</h3>
+        <Sticker name="pip-coffee" size={78} rot={-8} className="stk-how" drift={-16} delay={120} float />
+        <h3 className="how-title" data-reveal="up">
+          {t(ui.section.howIWork)}
+        </h3>
         <ol className="how-steps">
           {howIWork.map((s, k) => (
-            <li key={s.title.en} className="how-step">
+            <li key={s.title.en} className="how-step" data-reveal="up" style={{ '--k': k } as CSSProperties}>
               <span className="how-num mono">{String(k + 1).padStart(2, '0')}</span>
               <span className="how-step-title">{t(s.title)}</span>
               <span className="how-line">{t(s.line)}</span>

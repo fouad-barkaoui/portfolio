@@ -10,6 +10,10 @@ import '@fontsource/ibm-plex-sans-arabic/arabic-600.css';
 import '@fontsource/ibm-plex-sans-arabic/arabic-700.css';
 import './styles/index.css';
 import { App } from './App';
+import { startReveal } from './lib/reveal';
+
+// Scroll reveals work on the prerendered HTML, so they start before React does.
+startReveal();
 
 const container = document.getElementById('root')!;
 const app = (

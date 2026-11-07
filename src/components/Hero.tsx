@@ -9,13 +9,15 @@ import { Picture } from './Picture';
 import { LocalTime } from './primitives';
 import { RoleTicker } from './RoleTicker';
 import { SignalField } from './SignalField';
+import { Sticker } from './Sticker';
 
 /**
  * The one orchestrated moment on the page, in pure CSS so it starts with the
  * first paint of the prerendered HTML: construction lines draw in, the name
  * rises out of its masks, the portrait is uncovered, then the details settle.
  * It only runs when <html> has the `intro` class (set before paint unless the
- * visitor prefers reduced motion). Everything after the hero is still.
+ * visitor prefers reduced motion). Two stickers slap onto the portrait as the
+ * intro ends; the rest of the page reveals itself as you scroll (lib/reveal).
  */
 export function Hero(): JSX.Element {
   const { t } = useLang();
@@ -98,6 +100,15 @@ export function Hero(): JSX.Element {
             <span className="tick tr" aria-hidden />
             <span className="tick bl" aria-hidden />
             <span className="tick br" aria-hidden />
+            <Sticker name="nazar" size={104} rot={-11} className="stk-hero-nazar" drift={-26} delay={0} intro />
+            <Sticker name="sparkle-trio" size={66} rot={10} className="stk-hero-spark" drift={34} delay={180} intro float />
+            <span className="sticker-hint" aria-hidden>
+              <span className="note-text">{t(ui.stickers.hint)}</span>
+              <svg className="note-arrow" viewBox="0 0 44 40" width="44" height="40">
+                <path d="M3 34c12 1 24-5 30-16c2-4 3-8 3-13" />
+                <path d="M30 10l6-6l5 7" />
+              </svg>
+            </span>
             <div className="portrait-clip" data-intro="portrait">
               <Picture
                 pic={portrait}

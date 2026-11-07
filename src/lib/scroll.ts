@@ -3,11 +3,21 @@ import { prefersReducedMotion } from './motion';
 
 let lenis: Lenis | null = null;
 
+type VelocityListener = (velocity: number) => void;
+const velocityListeners = new Set<VelocityListener>();
+
+/** Scroll velocity from Lenis (px per frame, signed). Silent without smooth scroll. */
+export function onScrollVelocity(fn: VelocityListener): () => void {
+  velocityListeners.add(fn);
+  return () => velocityListeners.delete(fn);
+}
+
 /** Smooth scrolling (Lenis) — skipped entirely for reduced motion. */
 export async function startSmoothScroll(): Promise<() => void> {
   if (prefersReducedMotion()) return () => undefined;
   const { default: LenisCtor } = await import('lenis');
   lenis = new LenisCtor({ lerp: 0.12, wheelMultiplier: 1 });
+  lenis.on('scroll', (l: Lenis) => velocityListeners.forEach((fn) => fn(l.velocity)));
   let frame = 0;
   const raf = (time: number): void => {
     lenis?.raf(time);
