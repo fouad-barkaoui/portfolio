@@ -4859,80 +4859,9 @@ html.is-locked {
   }
 }
 
-/* Small inline sticker (band separators). */
-.sticker-dot {
-  display: block;
-  flex: none;
-  width: auto;
-  height: clamp(30px, 3.6vw, 46px);
-  rotate: var(--rot);
-  filter: drop-shadow(0 2px 1.5px rgb(0 0 0 / 0.3)) drop-shadow(0 6px 8px rgb(0 0 0 / 0.22));
-}
+/* ── Moving strips (the tapes) ─────────────────────────────────────────── */
 
-/* ── Marquee band ─────────────────────────────────────────────────────── */
-
-.marquee {
-  position: relative;
-}
-.marquee-view {
-  position: relative;
-  margin-inline: calc(50% - 50vw);
-  overflow: hidden;
-  border-block: 1px dashed var(--line-2);
-  background:
-    repeating-linear-gradient(-45deg, rgb(var(--tint) / 0.035) 0 1px, transparent 1px 8px),
-    color-mix(in oklab, var(--bg-2) 70%, transparent);
-  -webkit-mask: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
-  mask: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
-}
-.marquee-track {
-  display: flex;
-  width: max-content;
-  animation: marquee 64s linear infinite;
-}
-[dir='rtl'] .marquee-track {
-  animation-name: marquee-rtl;
-}
-.marquee[data-offscreen] .marquee-track,
-.marquee[data-stopped] .marquee-track {
-  animation-play-state: paused;
-}
-@media (hover: hover) and (pointer: fine) {
-  .marquee-view:hover .marquee-track {
-    animation-play-state: paused;
-  }
-}
-.marquee-group {
-  display: flex;
-  flex: none;
-  align-items: center;
-  gap: clamp(18px, 2.4vw, 30px);
-  padding-block: clamp(16px, 2.2vw, 24px);
-  padding-inline-end: clamp(18px, 2.4vw, 30px);
-}
-.marquee-word {
-  flex: none;
-  font-family: var(--font-display);
-  font-size: clamp(22px, 3.2vw, 38px);
-  font-weight: 700;
-  line-height: 1.1;
-  letter-spacing: -0.03em;
-  white-space: nowrap;
-  color: var(--ink);
-}
-.marquee-word[data-tone='outline'] {
-  color: transparent;
-  -webkit-text-stroke: 1.2px var(--ink);
-}
-:lang(ar) .marquee-word {
-  font-family: var(--font-sans);
-  letter-spacing: 0;
-}
-:lang(ar) .marquee-word[data-tone='outline'] {
-  color: var(--muted);
-  -webkit-text-stroke: 0;
-}
-.marquee-toggle {
+.tape-toggle {
   position: absolute;
   top: 50%;
   inset-inline-end: max(8px, calc(var(--pad) - 18px));
@@ -4954,8 +4883,8 @@ html.is-locked {
 }
 
 /* ── Between sections ─────────────────────────────────────────────────────
-   Sections sit on sheets (see "Sheets" below); the crossing tape rides the
-   seam before the contact sheet.                                          */
+   Sections sit on sheets (see "Sheets" below); crossing tapes ride the
+   seams into the security and contact sheets.                             */
 
 /* Tape: two strips crossing, running opposite ways. */
 .tape {
@@ -5049,7 +4978,7 @@ html.is-locked {
 .tape-strip[data-tone='ink'] .tape-star {
   fill: var(--accent-text);
 }
-.tape .marquee-toggle {
+.tape .tape-toggle {
   z-index: 3;
 }
 .tape[data-shown] .tape-strip[data-tone='lime'] .tape-roll {
@@ -5157,11 +5086,7 @@ html.is-locked {
 .hero-frame {
   isolation: isolate;
 }
-/* Bands that span the page start a little below a sheet's rounded top. */
-.sheet > .frame > .marquee:first-child {
-  margin-top: calc(var(--sheet-r) + clamp(10px, 2vw, 24px));
-}
-/* The tape is stuck across the seam between the motto and contact sheets. */
+/* Each tape is stuck across the seam at the top of its sheet. */
 .sheet > .frame > .tape:first-child {
   margin-top: calc(-2.8vw - 26px - clamp(12px, 2.6vw, 34px));
   margin-bottom: calc(clamp(-40px, -3vw, -18px));
@@ -5436,7 +5361,7 @@ html.is-locked {
 /* ── Reduced motion: nothing moves ────────────────────────────────────── */
 
 @media (prefers-reduced-motion: reduce) {
-  .marquee-toggle {
+  .tape-toggle {
     display: none;
   }
   *,

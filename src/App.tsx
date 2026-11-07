@@ -5,7 +5,6 @@ import { startSmoothScroll } from '@/lib/scroll';
 import { About } from './components/About';
 import { Contact, Footer, Motto, SoonPanels } from './components/Closing';
 import { Header } from './components/Header';
-import { Marquee } from './components/Marquee';
 import { Hero } from './components/Hero';
 import { Hatch, Rule } from './components/primitives';
 import { Projects } from './components/Projects';
@@ -76,7 +75,7 @@ function Page(): JSX.Element {
           <Projects />
         </Sheet>
         <Sheet tone="raised">
-          <Marquee />
+          <Tape variant="roles" />
           <SecurityCorner />
         </Sheet>
         <Sheet>
@@ -90,7 +89,7 @@ function Page(): JSX.Element {
           <Motto />
         </Sheet>
         <Sheet tone="raised">
-          <Tape />
+          <Tape variant="hiring" />
           <Contact />
           <Rule />
           <Footer />

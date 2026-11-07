@@ -213,22 +213,3 @@ export function Sticker({ name, size, rot = 0, className, float = false, drift =
     </span>
   );
 }
-
-/** Small inline sticker for bands and separators (no interaction). */
-export function StickerDot({ name, rot = 0 }: { name: StickerName; rot?: number }): JSX.Element {
-  const s = STICKERS[name];
-  return (
-    <img
-      className="sticker-dot"
-      src={s.src}
-      width={s.w}
-      height={s.h}
-      alt=""
-      aria-hidden
-      draggable={false}
-      loading="lazy"
-      decoding="async"
-      style={{ '--rot': `${rot}deg` } as CSSProperties}
-    />
-  );
-}

@@ -1,6 +1,6 @@
 import { Pause, Play } from 'lucide-react';
 import { Fragment, useRef, useState } from 'react';
-import { howIWork, ui, type L } from '@/content/content';
+import { howIWork, identity, security, ui, type L } from '@/content/content';
 import { useLang } from '@/lib/i18n';
 import { useScrollMarquee } from '@/lib/useScrollMarquee';
 
@@ -17,8 +17,8 @@ function Star(): JSX.Element {
 
 function Strip({ items, tone }: { items: readonly L[]; tone: 'lime' | 'ink' }): JSX.Element {
   const { t } = useLang();
-  // Each run says everything twice so one run is wider than any screen.
-  const words = [...items, ...items].map((w) => t(w));
+  // Repeat short lists so one run is wider than any screen.
+  const words = (items.length < 8 ? [...items, ...items] : items).map((w) => t(w));
   return (
     <div className="tape-strip" data-tone={tone}>
       <div className="tape-roll">
@@ -39,31 +39,37 @@ function Strip({ items, tone }: { items: readonly L[]; tone: 'lime' | 'ink' }): 
   );
 }
 
+/** What each tape says: the front (lime) strip and the back (light) one. */
+const TAPES = {
+  // Across the seam into the security sheet.
+  roles: { front: identity.roles, back: security.map((s) => s.title) },
+  // Across the seam between the motto and the contact sheet.
+  hiring: { front: [ui.hire.badge, ...ui.hire.roles, ui.hire.based], back: howIWork.map((s) => s.title) },
+} satisfies Record<string, { front: readonly L[]; back: readonly L[] }>;
+
 /**
- * Two strips of tape crossing between the motto and the contact section: a
- * lime one with what Fouad is looking for, a light one with how he works.
- * They run in opposite directions, react to scrolling like the role band,
- * and tilt a little further as you scroll past. Words already on the page,
- * so the strips are hidden from assistive tech; the pause button is not.
+ * Two strips of tape crossing a seam between sheets, running in opposite
+ * directions. They react to scrolling (faster while you scroll, following
+ * its direction) and tilt a little further as you pass. The words are
+ * already on the page, so the strips are hidden from assistive tech; the
+ * pause button is not (WCAG 2.2.2).
  */
-export function Tape(): JSX.Element {
+export function Tape({ variant }: { variant: keyof typeof TAPES }): JSX.Element {
   const { t } = useLang();
   const [stopped, setStopped] = useState(false);
   const band = useRef<HTMLDivElement>(null);
   useScrollMarquee(band, stopped);
-
-  const hiring: readonly L[] = [ui.hire.badge, ...ui.hire.roles, ui.hire.based];
-  const working: readonly L[] = howIWork.map((s) => s.title);
+  const { front, back } = TAPES[variant];
 
   return (
     <div ref={band} className="tape" data-reveal="tape" data-stopped={stopped || undefined}>
       <div className="tape-cross" aria-hidden>
-        <Strip items={working} tone="ink" />
-        <Strip items={hiring} tone="lime" />
+        <Strip items={back} tone="ink" />
+        <Strip items={front} tone="lime" />
       </div>
       <button
         type="button"
-        className="icon-btn marquee-toggle"
+        className="icon-btn tape-toggle"
         aria-pressed={stopped}
         aria-label={t(ui.marquee.pauseTape)}
         title={stopped ? t(ui.marquee.play) : t(ui.marquee.pause)}
