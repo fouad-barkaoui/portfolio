@@ -284,7 +284,6 @@ function BackToTop(): JSX.Element {
 
 export function Footer(): JSX.Element {
   const { t } = useLang();
-  const brands = socials.filter((s) => s.url && isBrand(s.id));
   return (
     <footer className="footer">
       <SignalField variant="footer" />
@@ -364,20 +363,6 @@ export function Footer(): JSX.Element {
             </p>
           </div>
         </div>
-
-        <ul className="footer-socials" aria-label={t(ui.footer.socials)}>
-          {brands.map((s) =>
-            isBrand(s.id) ? (
-              <li key={s.id}>
-                <a href={s.url} target="_blank" rel="noopener noreferrer me" data-brand={s.id}>
-                  <BrandIcon id={s.id} size={15} />
-                  {t(s.name)}
-                  <ArrowUpRight className="flip-rtl" size={13} strokeWidth={2.2} aria-hidden />
-                </a>
-              </li>
-            ) : null,
-          )}
-        </ul>
       </div>
     </footer>
   );

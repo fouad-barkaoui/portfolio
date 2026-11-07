@@ -15,7 +15,7 @@ export default defineConfig({
   },
   build: {
     target: 'es2022',
-    cssCodeSplit: false,
+    cssCodeSplit: true,
     assetsInlineLimit: 0,
   },
 });

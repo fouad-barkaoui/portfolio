@@ -25,6 +25,12 @@ export function LanguageProvider({ children }: { children: ReactNode }): JSX.Ele
     const root = document.documentElement;
     root.lang = lang;
     root.dir = lang === 'ar' ? 'rtl' : 'ltr';
+    // The Arabic face is only fetched once someone actually reads Arabic.
+    if (lang === 'ar') {
+      void import('@fontsource/ibm-plex-sans-arabic/arabic-400.css');
+      void import('@fontsource/ibm-plex-sans-arabic/arabic-600.css');
+      void import('@fontsource/ibm-plex-sans-arabic/arabic-700.css');
+    }
     document.title = ui.meta.title[lang];
     document.querySelector('meta[name="description"]')?.setAttribute('content', ui.meta.description[lang]);
     try {

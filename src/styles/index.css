@@ -249,10 +249,8 @@ img {
 }
 .site-header[data-scrolled],
 .site-header[data-open] {
-  background: var(--bg-glass);
+  background: color-mix(in oklab, var(--bg) 94%, transparent);
   border-bottom-color: var(--line-2);
-  backdrop-filter: blur(14px) saturate(1.2);
-  -webkit-backdrop-filter: blur(14px) saturate(1.2);
 }
 .site-header-inner {
   display: flex;
@@ -3368,61 +3366,6 @@ a.footer-link:hover svg {
   text-decoration-color: var(--accent);
 }
 
-/* Socials row */
-.footer-socials {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px 28px;
-  margin: 0;
-  padding: 22px 24px 26px;
-  border-top: 1px dashed var(--line-2);
-  list-style: none;
-}
-.footer-socials a {
-  display: inline-flex;
-  align-items: center;
-  gap: 9px;
-  color: var(--ink);
-  font-size: 13px;
-  font-weight: 650;
-  letter-spacing: 0.08em;
-  text-decoration: none;
-  text-transform: uppercase;
-}
-.footer-socials a > svg:last-child {
-  color: var(--muted);
-  transition:
-    transform 0.3s var(--ease-snap),
-    color 0.2s ease;
-}
-.footer-socials a:hover > svg:last-child {
-  color: var(--ink);
-  transform: translate(2px, -2px);
-}
-[dir='rtl'] .footer-socials a:hover > svg:last-child {
-  transform: scaleX(-1) translate(2px, -2px);
-}
-.footer-socials a:hover {
-  text-decoration: underline;
-  text-decoration-color: var(--line-2);
-  text-underline-offset: 5px;
-}
-.footer-socials [data-brand='linkedin'] > svg:first-child {
-  color: #0a66c2;
-}
-.footer-socials [data-brand='instagram'] > svg:first-child {
-  color: #ff0069;
-}
-.footer-socials [data-brand='facebook'] > svg:first-child {
-  color: #0866ff;
-}
-:root:not([data-theme='light']) .footer-socials [data-brand='linkedin'] > svg:first-child {
-  color: #3d8fe0;
-}
-:root:not([data-theme='light']) .footer-socials [data-brand='facebook'] > svg:first-child {
-  color: #3d86ff;
-}
-
 /* The CTA card — tilted at rest, it straightens up when you reach for it */
 .footer-cta {
   position: relative;
@@ -3593,10 +3536,6 @@ a.footer-link:hover svg {
   }
   .footer-link {
     padding: 0 16px;
-  }
-  .footer-socials {
-    padding: 20px 16px 24px;
-    gap: 14px 22px;
   }
   .footer-cta {
     margin: 16px;
@@ -4560,12 +4499,12 @@ html.is-locked {
   display: block;
   width: 100%;
   height: auto;
-  filter: drop-shadow(0 2px 1.5px rgb(0 0 0 / 0.35)) drop-shadow(0 10px 14px rgb(0 0 0 / 0.28));
+  filter: drop-shadow(0 6px 8px rgb(0 0 0 / 0.38));
   transition: filter 0.35s var(--ease-out);
   pointer-events: none;
 }
 :root[data-theme='light'] .sticker-body img {
-  filter: drop-shadow(0 1.5px 1px rgb(0 0 0 / 0.18)) drop-shadow(0 8px 12px rgb(0 0 0 / 0.14));
+  filter: drop-shadow(0 5px 7px rgb(0 0 0 / 0.2));
 }
 /* Vinyl sheen, cut to the sticker's own outline. */
 .sticker-gloss {
@@ -4589,10 +4528,10 @@ html.is-locked {
     scale: 1.07;
   }
   .sticker-body:hover img {
-    filter: drop-shadow(0 5px 3px rgb(0 0 0 / 0.3)) drop-shadow(0 18px 24px rgb(0 0 0 / 0.34));
+    filter: drop-shadow(0 12px 14px rgb(0 0 0 / 0.38));
   }
   :root[data-theme='light'] .sticker-body:hover img {
-    filter: drop-shadow(0 4px 2px rgb(0 0 0 / 0.16)) drop-shadow(0 16px 20px rgb(0 0 0 / 0.16));
+    filter: drop-shadow(0 10px 12px rgb(0 0 0 / 0.2));
   }
   .sticker-body:hover .sticker-gloss {
     opacity: 1;
@@ -4607,7 +4546,7 @@ html.is-locked {
     scale 0.2s var(--ease-out);
 }
 .sticker-body[data-state='lift'] img {
-  filter: drop-shadow(0 10px 6px rgb(0 0 0 / 0.24)) drop-shadow(0 30px 34px rgb(0 0 0 / 0.36));
+  filter: drop-shadow(0 22px 22px rgb(0 0 0 / 0.4));
 }
 .sticker-body[data-state='drop'] img {
   animation: sticker-drop 0.42s var(--ease-out);
@@ -4659,7 +4598,7 @@ html.is-locked {
 }
 @keyframes sticker-press {
   0% {
-    filter: drop-shadow(0 18px 10px rgb(0 0 0 / 0.18)) drop-shadow(0 44px 40px rgb(0 0 0 / 0.3));
+    filter: drop-shadow(0 28px 24px rgb(0 0 0 / 0.34));
   }
 }
 @keyframes sticker-drop {
@@ -5126,7 +5065,7 @@ html.is-locked {
 }
 @keyframes sheet-sink {
   to {
-    scale: 0.94;
+    translate: 0 5vh;
   }
 }
 @keyframes sheet-dim {
