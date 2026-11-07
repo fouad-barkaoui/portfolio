@@ -4,29 +4,19 @@ import { identity, ui, type L } from '@/content/content';
 import { useLang } from '@/lib/i18n';
 import { describeGap, tzOffsetMinutes, useNow } from '@/lib/time';
 
-/**
- * Dashed rule across the page with plus marks where it meets the frame. It
- * draws itself in from the middle, and a lime signal runs along it as you
- * scroll past.
- */
+/** Dashed rule across the page with plus marks where it meets the frame. */
 export function Rule(): JSX.Element {
   return (
-    <div className="rule" aria-hidden data-reveal="rule">
+    <div className="rule" aria-hidden>
       <i className="plus" data-side="start" />
       <i className="plus" data-side="end" />
-      <span className="rule-track">
-        <i className="rule-pulse" />
-      </span>
     </div>
   );
 }
 
-/**
- * Hatched band between two dashed lines, edge to edge. It unrolls from the
- * middle, its hatching slides with scroll, and a lime scanner sweeps across.
- */
+/** Hatched band between two dashed lines, edge to edge. */
 export function Hatch(): JSX.Element {
-  return <div className="hatch" aria-hidden data-reveal="hatch" />;
+  return <div className="hatch" aria-hidden />;
 }
 
 /** Handwritten aside in the margin with a curved arrow. Wide screens only. */
@@ -75,8 +65,10 @@ export function SectionHead({
     <header className="section-head">
       <Note>{t(note)}</Note>
       <h2 id={id} className="section-title">
-        <span className="title-text" data-reveal="wipe">
-          {t(title)}
+        <span className="title-text" data-reveal="rise">
+          <span className="title-mask">
+            <span className="title-inner">{t(title)}</span>
+          </span>
           {count !== undefined ? <sup className="count">({count})</sup> : null}
         </span>
         {sticker ? <span className="title-sticker">{sticker}</span> : null}

@@ -1,11 +1,12 @@
-import { Menu, Moon, Sun, X, FilePenLine } from 'lucide-react';
-import { useEffect, useState, type MouseEvent } from 'react';
+import { Moon, Sun, FilePenLine } from 'lucide-react';
+import { useEffect, useState, type CSSProperties, type MouseEvent } from 'react';
 import { briefUi } from '@/content/brief';
 import { ui } from '@/content/content';
 import { openBrief } from '@/lib/brief';
 import { useLang } from '@/lib/i18n';
 import { useTheme } from '@/lib/theme';
-import { scrollToId } from '@/lib/scroll';
+import { lockScroll } from '@/lib/scroll';
+import { navigateTo } from '@/lib/wipe';
 import { Logo } from './Logo';
 
 const LINKS = [
@@ -21,13 +22,37 @@ export function Header(): JSX.Element {
   const { shown: theme, toggle: toggleTheme } = useTheme();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [active, setActive] = useState<string | null>(null);
 
+  // Header glass once the page moves, and which section is under the header.
   useEffect(() => {
-    const onScroll = (): void => setScrolled(window.scrollY > 8);
-    onScroll();
+    let frame = 0;
+    const update = (): void => {
+      frame = 0;
+      setScrolled(window.scrollY > 8);
+      let current: string | null = null;
+      for (const l of LINKS) {
+        const el = document.getElementById(l.id);
+        if (el && el.getBoundingClientRect().top <= 140) current = l.id;
+      }
+      setActive(current);
+    };
+    const onScroll = (): void => {
+      if (!frame) frame = requestAnimationFrame(update);
+    };
+    update();
     window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      cancelAnimationFrame(frame);
+    };
   }, []);
+
+  // The open menu holds the page still.
+  useEffect(() => {
+    lockScroll(open);
+    return () => lockScroll(false);
+  }, [open]);
 
   useEffect(() => {
     if (!open) return;
@@ -41,10 +66,12 @@ export function Header(): JSX.Element {
   const go = (id: string) => (e: MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     setOpen(false);
-    scrollToId(id);
+    void navigateTo(id);
   };
 
   return (
+    <>
+    <div className="nav-overlay" data-open={open || undefined} onClick={() => setOpen(false)} aria-hidden />
     <header className="site-header" data-scrolled={scrolled || undefined} data-open={open || undefined}>
       <div className="site-header-inner">
         <a href="#top" className="brand" onClick={go('top')} aria-label={t(ui.home)}>
@@ -53,14 +80,17 @@ export function Header(): JSX.Element {
 
         <nav className="nav" aria-label={lang === 'ar' ? 'التنقّل الرئيسي' : 'Main'}>
           <ul id="site-nav">
-            {LINKS.map((l) => (
-              <li key={l.id}>
-                <a href={`#${l.id}`} onClick={go(l.id)}>
-                  {t(l.label)}
+            {LINKS.map((l, i) => (
+              <li key={l.id} style={{ '--i': i } as CSSProperties}>
+                <a href={`#${l.id}`} onClick={go(l.id)} data-active={active === l.id || undefined} aria-current={active === l.id ? 'location' : undefined}>
+                  <span className="roll">
+                    <span>{t(l.label)}</span>
+                    <span aria-hidden>{t(l.label)}</span>
+                  </span>
                 </a>
               </li>
             ))}
-            <li className="nav-brief">
+            <li className="nav-brief" style={{ '--i': LINKS.length } as CSSProperties}>
               <a
                 href="#brief"
                 onClick={(e) => {
@@ -109,10 +139,14 @@ export function Header(): JSX.Element {
             aria-label={open ? t(ui.close) : t(ui.menu)}
             onClick={() => setOpen((o) => !o)}
           >
-            {open ? <X size={17} strokeWidth={1.8} aria-hidden /> : <Menu size={17} strokeWidth={1.8} aria-hidden />}
+            <span className="burger" aria-hidden>
+              <i />
+              <i />
+            </span>
           </button>
         </div>
       </div>
     </header>
+    </>
   );
 }

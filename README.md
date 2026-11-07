@@ -6,9 +6,10 @@ SOC analyst and fullstack developer from Morocco. Case studies for Kanz (live
 product), Windows Field Manual (189-command Windows troubleshooting reference), Prompt Engine (prompt quality and security scanner), Resume Studio
 (offline AI resume optimizer) and ASSAS (codebase security scanner), the
 security learning path, the stack in context and every way to reach me. English and Arabic (full right-to-left), dark by default with
-a light theme. Stickers you can peel off and move around, scroll reveals and a
-moving band of roles give it some life; all of it stands still for visitors who
-prefer reduced motion.
+a light theme. Stickers you can peel off and move around, sections on rounded sheets that
+rise over each other as you scroll, a scribble transition on menu clicks,
+scroll reveals and a moving band of roles give it some life; all of it stands
+still for visitors who prefer reduced motion.
 
 ## Stack
 
@@ -46,7 +47,9 @@ npm run preview   # serve dist/
 | Scroll reveals | `src/lib/reveal.ts` (mark an element with `data-reveal="up"`, `pop`, `wipe`…) |
 | Moving band of roles | `src/components/Marquee.tsx` |
 | Crossing tape before Contact | `src/components/Tape.tsx` (both bands share `src/lib/useScrollMarquee.ts`) |
-| Animated dividers (signal on rules, scanner on hatch bands) | `Rule` and `Hatch` in `src/components/primitives.tsx`, styles under "Between sections" in `index.css` |
+| Section sheets (rounded sheets that rise over each other) | `src/components/Sheet.tsx`, layout in `src/App.tsx`, styles under "Sheets" in `index.css` |
+| Menu transition (lime scribble that covers, jumps, wipes off) | `src/lib/wipe.ts` + `src/components/Wipe.tsx`; used by the header menu and the scroll index |
+| Mobile menu (folding card, rising links, two-line icon) | `src/components/Header.tsx`, styles under "Header" in `index.css` |
 
 Change content only in `content.ts`; layout never needs touching.
 

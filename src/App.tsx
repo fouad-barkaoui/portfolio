@@ -11,7 +11,9 @@ import { Hatch, Rule } from './components/primitives';
 import { Projects } from './components/Projects';
 import { ScrollIndex } from './components/ScrollIndex';
 import { SecurityCorner } from './components/SecurityCorner';
+import { Sheet } from './components/Sheet';
 import { Tape } from './components/Tape';
+import { Wipe } from './components/Wipe';
 import { BuiltWith, Stack } from './components/Stack';
 
 const BriefForm = lazy(() => import('./components/BriefForm'));
@@ -61,29 +63,38 @@ function Page(): JSX.Element {
       </a>
       <Header />
       <ScrollIndex />
+      <Wipe />
       <BriefHost />
       <main id="main" className="page">
-        <div className="frame">
+        <div className="frame hero-frame">
           <Hero />
-          <Rule />
+        </div>
+        <Sheet tone="raised">
           <About />
-          <Hatch />
+        </Sheet>
+        <Sheet>
           <Projects />
+        </Sheet>
+        <Sheet tone="raised">
           <Marquee />
           <SecurityCorner />
-          <Rule />
+        </Sheet>
+        <Sheet>
           <Stack />
           <Hatch />
           <BuiltWith />
           <Hatch />
           <SoonPanels />
-          <Hatch />
+        </Sheet>
+        <Sheet tone="lime">
           <Motto />
+        </Sheet>
+        <Sheet tone="raised">
           <Tape />
           <Contact />
           <Rule />
           <Footer />
-        </div>
+        </Sheet>
       </main>
     </>
   );

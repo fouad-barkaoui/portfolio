@@ -48,8 +48,10 @@ export function About(): JSX.Element {
               {t(ui.section.about)}
             </p>
             <h2 id="about-title" className="greeting">
-              <span className="title-text" data-reveal="wipe">
-                {t(greeting)}
+              <span className="title-text" data-reveal="rise">
+                <span className="title-mask">
+                  <span className="title-inner">{t(greeting)}</span>
+                </span>
               </span>
             </h2>
           </header>

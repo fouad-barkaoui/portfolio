@@ -1,5 +1,35 @@
 import { prefersReducedMotion } from './motion';
 
+let observers: IntersectionObserver[] = [];
+
+/**
+ * Hides the revealable elements now on screen and stops watching them, so a
+ * caller can play their entrances later (the menu transition does this
+ * while the screen is covered). Returns them in page order.
+ */
+export function holdOnScreen(): HTMLElement[] {
+  if (!document.documentElement.classList.contains('has-reveal')) return [];
+  const held: HTMLElement[] = [];
+  document.querySelectorAll<HTMLElement>('[data-reveal]').forEach((el) => {
+    const r = el.getBoundingClientRect();
+    if (!r.width || r.bottom <= 0 || r.top >= window.innerHeight) return;
+    observers.forEach((o) => o.unobserve(el));
+    el.setAttribute('data-seen', '');
+    el.removeAttribute('data-shown');
+    el.setAttribute('data-wait', '');
+    held.push(el);
+  });
+  return held;
+}
+
+/** Plays the entrance of elements returned by holdOnScreen(). */
+export function playHeld(els: HTMLElement[]): void {
+  els.forEach((el) => {
+    el.removeAttribute('data-wait');
+    el.setAttribute('data-shown', '');
+  });
+}
+
 /**
  * Scroll reveals for anything marked `data-reveal` (see the "Motion" block in
  * index.css for the variants).
@@ -45,6 +75,7 @@ export function startReveal(): () => void {
   };
   const scan = (root: ParentNode): void => root.querySelectorAll('[data-reveal]').forEach(track);
 
+  observers = [first, reveal];
   scan(document);
   document.documentElement.classList.add('has-reveal');
 

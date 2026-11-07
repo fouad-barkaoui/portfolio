@@ -15,11 +15,19 @@ export function SignalField({ variant }: { variant: 'hero' | 'footer' }): JSX.El
     const host = el?.parentElement;
     if (!el || !host) return;
 
-    // Keep the lit dots on the same 26px lattice as the body's dot grid.
+    // Keep the lit dots on the same 26px lattice as the dot grid behind them:
+    // the page's, or the sheet's when the field sits on a sheet.
+    // Layout offsets, so a sheet's scroll scaling doesn't skew the result.
     const align = (): void => {
-      const r = el.getBoundingClientRect();
-      const ox = -((r.left + window.scrollX) % 26);
-      const oy = -((r.top + window.scrollY) % 26);
+      const sheet = el.closest('.sheet');
+      let x = 0;
+      let y = 0;
+      for (let n: HTMLElement | null = el; n && n !== sheet; n = n.offsetParent as HTMLElement | null) {
+        x += n.offsetLeft;
+        y += n.offsetTop;
+      }
+      const ox = -(x % 26);
+      const oy = -(y % 26);
       el.style.setProperty('--ox', `${ox.toFixed(1)}px`);
       el.style.setProperty('--oy', `${oy.toFixed(1)}px`);
     };

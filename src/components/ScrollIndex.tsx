@@ -2,7 +2,7 @@ import { ArrowUp, Check, ChevronDown } from 'lucide-react';
 import { useCallback, useEffect, useId, useRef, useState, type KeyboardEvent } from 'react';
 import { ui, type L } from '@/content/content';
 import { useLang } from '@/lib/i18n';
-import { scrollToId } from '@/lib/scroll';
+import { navigateTo } from '@/lib/wipe';
 
 interface Entry {
   id: string;
@@ -114,8 +114,8 @@ export function ScrollIndex(): JSX.Element {
 
   const go = (id: string): void => {
     setOpen(false);
-    // let the menu close first so nothing competes with the smooth scroll
-    window.setTimeout(() => scrollToId(id), 30);
+    // let the menu close first, then the same transition as the main menu
+    window.setTimeout(() => void navigateTo(id), 30);
   };
 
   const onMenuKey = (e: KeyboardEvent<HTMLDivElement>): void => {
