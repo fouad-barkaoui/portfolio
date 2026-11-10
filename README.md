@@ -70,4 +70,4 @@ from this folder, or connect the GitHub repo for automatic deploys.
 - Smaller project cards — Sentinel Ops Console, Hrbān, the CTI aggregation tool,
   the Resume Optimizer Studio, Spatial Notes — each needs a yes first
 - Contact form backend (currently mailto only, by design)
-- Official logo files for the "Built with" wall (names show as text until then)
+- Official logo files for the "Built with" row (optional: Simple Icons marks stand in until then, and MITRE ATT&CK shows a text label)

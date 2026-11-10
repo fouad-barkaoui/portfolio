@@ -540,17 +540,26 @@ export const stack: readonly StackGroup[] = [
 /* ── Built with (logo wall) ──────────────────────────────────────────── */
 
 /**
- * Official logo files go in src/assets/logos/<slug>.svg (see the README there).
- * Until a file exists, the name is shown as text — never a redrawn logo.
+ * Each entry is one chip in the "Built with" row. The mark is, in order: an
+ * official file in src/assets/logos/<slug>.svg (see the README there), the
+ * mark Simple Icons ships for it, or the short text label. Never a redrawn logo.
  */
-export const builtWith = [
+export interface BuiltWithItem {
+  name: string;
+  slug: string;
+  url: string;
+  /** Shown inside the chip when there is no mark to use. */
+  short?: string;
+}
+
+export const builtWith: readonly BuiltWithItem[] = [
   { name: 'Supabase', slug: 'supabase', url: 'https://supabase.com' },
   { name: 'Claude', slug: 'claude', url: 'https://claude.ai' },
   { name: 'Claude Code', slug: 'claude-code', url: 'https://claude.com/claude-code' },
   { name: 'Vercel', slug: 'vercel', url: 'https://vercel.com' },
   { name: 'GitHub', slug: 'github', url: 'https://github.com' },
-  { name: 'MITRE ATT&CK', slug: 'mitre-attack', url: 'https://attack.mitre.org' },
-] as const;
+  { name: 'MITRE ATT&CK', slug: 'mitre-attack', url: 'https://attack.mitre.org', short: 'ATT&CK' },
+];
 
 /* ── Socials ─────────────────────────────────────────────────────────── */
 
@@ -711,6 +720,7 @@ export const ui = {
     ),
     stack: l('Stack', 'الأدوات والتقنيات'),
     builtWith: l('Built with', 'بُني باستخدام'),
+    builtWithSub: l('The tools, platforms and frameworks behind my work.', 'الأدوات والمنصّات والأُطر التي يقوم عليها عملي.'),
     experience: l('Experience', 'الخبرة'),
     recognition: l('Recognition', 'الشهادات والتقدير'),
     contact: l('Write to me', 'راسلني'),
