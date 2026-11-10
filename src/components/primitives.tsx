@@ -42,8 +42,9 @@ export function Status({ children, tone = 'soon' }: { children: ReactNode; tone?
 }
 
 /**
- * Section heading with its margin note, an optional count, and an optional
- * sticker that sits just past the end of the title (in either direction).
+ * Section heading with its margin note, an optional count, an optional
+ * sticker that sits just past the end of the title (in either direction),
+ * and an optional inline extra (a status pill) after the title.
  */
 export function SectionHead({
   id,
@@ -52,6 +53,7 @@ export function SectionHead({
   count,
   sub,
   sticker,
+  after,
 }: {
   id: string;
   note: L;
@@ -59,6 +61,7 @@ export function SectionHead({
   count?: number;
   sub?: L;
   sticker?: ReactNode;
+  after?: ReactNode;
 }): JSX.Element {
   const { t } = useLang();
   return (
@@ -71,6 +74,11 @@ export function SectionHead({
           </span>
           {count !== undefined ? <sup className="count">({count})</sup> : null}
         </span>
+        {after ? (
+          <span className="title-after" data-reveal="up" style={{ '--k': 3 } as CSSProperties}>
+            {after}
+          </span>
+        ) : null}
         {sticker ? <span className="title-sticker">{sticker}</span> : null}
       </h2>
       {sub ? (

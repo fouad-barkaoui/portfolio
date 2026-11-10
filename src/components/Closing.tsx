@@ -1,6 +1,19 @@
-import { ArrowUp, ArrowUpRight, FilePenLine, FileText, Mail } from 'lucide-react';
+import {
+  ArrowUp,
+  ArrowUpRight,
+  Award,
+  BriefcaseBusiness,
+  FileBadge,
+  FilePenLine,
+  FileText,
+  GraduationCap,
+  IdCard,
+  Mail,
+  Route,
+  type LucideIcon,
+} from 'lucide-react';
 import type { CSSProperties } from 'react';
-import { identity, motto, projects, socials, soon, ui, type Social } from '@/content/content';
+import { identity, motto, projects, socials, soon, ui, type L, type Slot, type SlotId, type Social } from '@/content/content';
 import { useLang } from '@/lib/i18n';
 import { useMagnetic } from '@/lib/motion';
 import { scrollToId } from '@/lib/scroll';
@@ -13,16 +26,37 @@ import { SignalField } from './SignalField';
 import { CopyEmail, SectionHead, Status } from './primitives';
 import { Sticker } from './Sticker';
 
-/* ── Experience & Recognition: empty on purpose ──────────────────────── */
+/* ── Experience & Recognition: empty on purpose ────────────────────────
+   Each panel is a bordered card of cells split by hairlines, one cell per
+   kind of entry it will hold. Real entries replace the cells later.       */
 
-function SoonPanel({ id, note, title, text }: { id: string; note: typeof ui.notes.worked; title: typeof ui.section.experience; text: typeof soon.experience }): JSX.Element {
+const SLOT_ICONS: Record<SlotId, LucideIcon> = {
+  role: BriefcaseBusiness,
+  internship: GraduationCap,
+  position: IdCard,
+  certificate: FileBadge,
+  award: Award,
+  program: Route,
+};
+
+function SoonPanel({ id, note, title, slots }: { id: string; note: L; title: L; slots: readonly Slot[] }): JSX.Element {
   const { t } = useLang();
   return (
     <section className="soon-col" aria-labelledby={id}>
-      <SectionHead id={id} note={note} title={title} />
-      <div className="soon" data-reveal="up">
-        <Status>{t(ui.status.soon)}</Status>
-        <p>{t(text)}</p>
+      <SectionHead id={id} note={note} title={title} after={<Status>{t(ui.status.soon)}</Status>} />
+      <div className="slots" data-reveal="up">
+        <ul className="slots-grid">
+          {slots.map((s) => {
+            const Icon = SLOT_ICONS[s.id];
+            return (
+              <li key={s.id} className="slot">
+                <Icon className="slot-icon" size={24} strokeWidth={1.75} aria-hidden />
+                <h3 className="slot-title">{t(s.title)}</h3>
+                <p className="slot-text">{t(s.text)}</p>
+              </li>
+            );
+          })}
+        </ul>
       </div>
     </section>
   );
@@ -31,8 +65,8 @@ function SoonPanel({ id, note, title, text }: { id: string; note: typeof ui.note
 export function SoonPanels(): JSX.Element {
   return (
     <div className="section soon-grid">
-      <SoonPanel id="experience-title" note={ui.notes.worked} title={ui.section.experience} text={soon.experience} />
-      <SoonPanel id="recognition-title" note={ui.notes.milestones} title={ui.section.recognition} text={soon.recognition} />
+      <SoonPanel id="experience-title" note={ui.notes.worked} title={ui.section.experience} slots={soon.experience} />
+      <SoonPanel id="recognition-title" note={ui.notes.milestones} title={ui.section.recognition} slots={soon.recognition} />
     </div>
   );
 }

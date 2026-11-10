@@ -605,10 +605,51 @@ export const socials: readonly Social[] = [
 
 /* ── Empty on purpose ────────────────────────────────────────────────── */
 
-export const soon = {
-  experience: l('Roles, internships and positions will be listed here.', 'ستُدرَج هنا الوظائف والتدريبات والمناصب.'),
-  recognition: l('Certificates, awards and programs will be listed here.', 'ستُدرَج هنا الشهادات والجوائز والبرامج.'),
-} as const;
+export type SlotId = 'role' | 'internship' | 'position' | 'certificate' | 'award' | 'program';
+
+/** One kind of entry a panel will hold once there is something true to put in it. */
+export interface Slot {
+  id: SlotId;
+  title: L;
+  text: L;
+}
+
+export const soon: Readonly<Record<'experience' | 'recognition', readonly Slot[]>> = {
+  experience: [
+    {
+      id: 'role',
+      title: l('Roles', 'الوظائف'),
+      text: l("Jobs I've held, and what I was trusted with.", 'الوظائف التي شغلتها وما أُسند إليّ فيها.'),
+    },
+    {
+      id: 'internship',
+      title: l('Internships', 'التدريبات'),
+      text: l('Placements, and what each one taught me.', 'فترات التدريب وما تعلّمته في كلّ منها.'),
+    },
+    {
+      id: 'position',
+      title: l('Positions', 'المناصب'),
+      text: l('Posts and responsibilities along the way.', 'المهامّ والمسؤوليات التي تولّيتها.'),
+    },
+  ],
+  recognition: [
+    {
+      id: 'certificate',
+      title: l('Certificates', 'الشهادات'),
+      text: l('Exams passed and courses completed.', 'الاختبارات التي اجتزتها والدورات التي أتممتها.'),
+    },
+    {
+      id: 'award',
+      title: l('Awards', 'الجوائز'),
+      text: l('Prizes, rankings and competition results.', 'الجوائز والتصنيفات ونتائج المسابقات.'),
+    },
+    {
+      id: 'program',
+      title: l('Programs', 'البرامج'),
+      text: l('Bootcamps, cohorts and training tracks.', 'المعسكرات التدريبية والمسارات التعليمية.'),
+    },
+  ],
+};
 
 /* ── Motto — Fouad's own line ────────────────────────────────────────── */
 
