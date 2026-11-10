@@ -236,30 +236,59 @@ img {
   background: repeating-linear-gradient(-45deg, var(--line) 0 1px, transparent 1px 8px);
 }
 
-/* ── Header ───────────────────────────────────────────────────────────── */
+/* ── Header ─────────────────────────────────────────────────────────────
+   Wide screens: a clear bar across the frame while the page is at the top.
+   Once it moves, the bar condenses into a floating card: narrower, dropped
+   8px, bordered and frosted. Narrow screens: a plain bar, and the menu opens
+   as a frosted full screen under it.                                      */
 
 .site-header {
+  --bar: 48px;
+  --ease-bar: cubic-bezier(0, 0, 0.2, 1);
   position: fixed;
-  inset: 0 0 auto;
+  top: 0;
+  inset-inline: 0;
   z-index: 50;
-  border-bottom: 1px dashed transparent;
+  width: 100%;
+  max-width: var(--frame);
+  margin-inline: auto;
+  border: 1px solid transparent;
+  border-radius: 12px;
   transition:
-    background-color 0.25s ease,
-    border-color 0.25s ease;
+    top 0.15s var(--ease-bar),
+    width 0.15s var(--ease-bar),
+    max-width 0.15s var(--ease-bar),
+    background-color 0.15s var(--ease-bar),
+    border-color 0.15s var(--ease-bar),
+    box-shadow 0.15s var(--ease-bar);
 }
-.site-header[data-scrolled],
-.site-header[data-open] {
-  background: color-mix(in oklab, var(--bg) 94%, transparent);
-  border-bottom-color: var(--line-2);
+.site-header[data-scrolled] {
+  top: 8px;
+  width: calc(100% - 16px);
+  max-width: 880px;
+  border-color: var(--line-2);
+  background: color-mix(in oklab, var(--bg) 95%, transparent);
+  box-shadow:
+    0 1px 3px rgb(0 0 0 / 0.12),
+    0 12px 28px -18px rgb(0 0 0 / 0.55);
+}
+@supports ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+  .site-header[data-scrolled] {
+    background: color-mix(in oklab, var(--bg) 80%, transparent);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+  }
 }
 .site-header-inner {
   display: flex;
   align-items: center;
-  gap: 16px;
-  max-width: var(--frame);
-  height: 64px;
-  margin: 0 auto;
+  gap: 8px;
+  height: var(--bar);
   padding: 0 var(--pad);
+  transition: padding 0.15s var(--ease-bar);
+}
+.site-header[data-scrolled] .site-header-inner {
+  padding: 0 7px;
 }
 .brand {
   display: inline-flex;
@@ -321,9 +350,9 @@ img {
   position: relative;
   display: inline-flex;
   align-items: center;
-  height: 36px;
+  height: 34px;
   padding: 0 12px;
-  border-radius: 999px;
+  border-radius: 8px;
   color: var(--muted);
   font-size: 15px;
   font-weight: 500;
@@ -335,6 +364,9 @@ img {
 .nav a:hover,
 .nav a[data-active] {
   color: var(--ink);
+}
+.nav a:hover {
+  background: rgb(var(--tint) / 0.07);
 }
 /* The label rolls up and a copy rolls in from below. */
 .roll {
@@ -361,7 +393,7 @@ img {
 .nav a::after {
   content: '';
   position: absolute;
-  bottom: 3px;
+  bottom: 2px;
   left: 50%;
   width: 5px;
   height: 5px;
@@ -381,12 +413,13 @@ img {
   display: flex;
   align-items: center;
   gap: 6px;
+  margin-inline-start: 6px;
 }
 .lang-btn {
-  height: 36px;
-  padding: 0 14px;
+  height: 34px;
+  padding: 0 12px;
   border: 1px solid var(--line-2);
-  border-radius: 999px;
+  border-radius: 8px;
   background: transparent;
   color: var(--ink);
   font: 600 14px/1 var(--font-sans);
@@ -420,154 +453,124 @@ img {
   background: var(--live-bg);
   color: var(--accent-text);
 }
+.header-tools .icon-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+}
 .menu-btn {
   display: none;
-}
-
-/* Two-line menu icon that folds into an X. */
-.burger {
-  position: relative;
-  display: block;
-  width: 16px;
-  height: 10px;
-}
-.burger i {
-  position: absolute;
-  inset-inline: 0;
-  height: 1.8px;
-  border-radius: 2px;
-  background: currentColor;
-  transition:
-    translate 0.25s var(--ease-osmo) 0.2s,
-    rotate 0.3s var(--ease-osmo);
-}
-.burger i:first-child {
-  top: 0;
-}
-.burger i:last-child {
-  bottom: 0;
-}
-.site-header[data-open] .burger i {
-  transition:
-    translate 0.25s var(--ease-osmo),
-    rotate 0.3s var(--ease-osmo) 0.19s;
-}
-.site-header[data-open] .burger i:first-child {
-  translate: 0 4.1px;
-  rotate: 45deg;
-}
-.site-header[data-open] .burger i:last-child {
-  translate: 0 -4.1px;
-  rotate: -45deg;
 }
 .nav-overlay {
   display: none;
 }
 
 @media (max-width: 860px) {
+  .site-header,
+  .site-header[data-scrolled] {
+    --bar: 56px;
+    top: 0;
+    width: 100%;
+    max-width: none;
+    border-width: 0 0 1px;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  .site-header[data-scrolled] .site-header-inner {
+    padding: 0 var(--pad);
+  }
   .menu-btn {
     display: inline-grid;
   }
-  /* The menu is a card that unfolds under the header, its links rising in. */
+  .header-tools {
+    margin-inline-start: auto;
+  }
+  /* The menu: a full screen under the bar. The frost is .nav-overlay, a
+     sibling of the header, so it blurs the page and not the bar's own frost. */
   .nav {
     position: absolute;
-    top: 70px;
-    inset-inline: 10px;
-    padding: 12px;
+    top: 100%;
+    inset-inline: 0;
+    height: calc(100dvh - var(--bar));
+    margin: 0;
+    padding: 16px var(--pad) 32px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
     visibility: hidden;
-    pointer-events: none;
-    transition: visibility 0s linear 0.45s;
-  }
-  .nav::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border: 1px solid var(--line-2);
-    border-radius: 22px;
-    background: var(--bg-raised);
-    box-shadow: 0 30px 70px -24px rgb(0 0 0 / 0.65);
-    clip-path: inset(0 0 100% 0 round 22px);
-    transition: clip-path 0.45s var(--ease-osmo);
-  }
-  :root[data-theme='light'] .nav::before {
-    box-shadow: 0 30px 70px -30px rgb(0 0 0 / 0.25);
+    opacity: 0;
+    transition:
+      opacity 0.15s ease,
+      visibility 0s linear 0.15s;
   }
   .site-header[data-open] .nav {
     visibility: visible;
-    pointer-events: auto;
+    opacity: 1;
     transition: none;
-  }
-  .site-header[data-open] .nav::before {
-    clip-path: inset(0 0 0 0 round 22px);
-    transition: clip-path 0.7s var(--ease-osmo);
+    animation: nav-zoom 0.15s var(--ease-bar);
   }
   .nav ul {
-    position: relative;
-    flex-direction: column;
-    gap: 0;
-  }
-  .nav li {
-    opacity: 0;
-    translate: 0 70%;
-    transition:
-      opacity 0.2s ease,
-      translate 0.3s var(--ease-osmo);
-  }
-  .site-header[data-open] .nav li {
-    opacity: 1;
-    translate: 0 0;
-    transition:
-      opacity 0.45s ease calc(0.12s + var(--i, 0) * 0.05s),
-      translate 0.75s var(--ease-osmo) calc(0.1s + var(--i, 0) * 0.05s);
+    display: grid;
+    gap: 8px;
   }
   .nav a {
     width: 100%;
-    height: 54px;
-    padding: 0 14px;
-    border-radius: 14px;
-    border-bottom: 1px dashed var(--line);
+    height: 44px;
+    padding: 0 12px;
     color: var(--ink);
-    font-family: var(--font-display);
-    font-size: 22px;
-    font-weight: 600;
-    letter-spacing: -0.02em;
+    font-size: 17px;
   }
-  :lang(ar) .nav a {
-    font-family: var(--font-sans);
-    font-weight: 700;
-    letter-spacing: 0;
-  }
-  .nav li:nth-last-child(2) a {
-    border-bottom: 0;
+  .nav a[data-active] {
+    background: rgb(var(--tint) / 0.05);
   }
   .nav a::after {
     top: 50%;
     bottom: auto;
     left: auto;
-    inset-inline-end: 16px;
+    inset-inline-end: 14px;
     margin: -3px 0 0;
-    width: 7px;
-    height: 7px;
+    width: 6px;
+    height: 6px;
   }
   .nav-overlay {
     position: fixed;
     inset: 0;
     z-index: 49;
     display: block;
-    background: rgb(0 0 0 / 0.45);
+    background: color-mix(in oklab, var(--bg) 95%, transparent);
     opacity: 0;
     visibility: hidden;
     transition:
-      opacity 0.4s var(--ease-osmo),
-      visibility 0s linear 0.4s;
+      opacity 0.2s ease,
+      visibility 0s linear 0.2s;
+  }
+  @supports ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+    .nav-overlay {
+      background: color-mix(in oklab, var(--bg) 72%, transparent);
+      -webkit-backdrop-filter: blur(8px);
+      backdrop-filter: blur(8px);
+    }
   }
   .nav-overlay[data-open] {
     opacity: 1;
     visibility: visible;
-    transition: opacity 0.4s var(--ease-osmo);
+    transition: opacity 0.5s ease;
   }
-  .header-tools {
-    margin-inline-start: auto;
+}
+@keyframes nav-zoom {
+  from {
+    scale: 0.97;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .site-header,
+  .site-header-inner,
+  .nav,
+  .nav-overlay,
+  .nav-overlay[data-open] {
+    transition: none;
+  }
+  .site-header[data-open] .nav {
+    animation: none;
   }
 }
 
@@ -3013,7 +3016,7 @@ a.social:hover .social-go {
   --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
   --pill-done: var(--accent);
   position: fixed;
-  top: 76px;
+  top: 70px;
   inset-inline: 0;
   z-index: 40;
   display: flex;
@@ -3961,18 +3964,15 @@ html.is-locked {
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  height: 36px;
-  padding: 0 14px;
-  margin-inline-end: 4px;
-  border-radius: 999px;
+  height: 34px;
+  padding: 0 12px;
+  border-radius: 8px;
   background: var(--accent);
   color: var(--accent-ink);
   font: 650 14px/1 var(--font-sans);
   text-decoration: none;
   white-space: nowrap;
-  transition:
-    transform 0.3s var(--ease-snap),
-    box-shadow 0.3s var(--ease-snap);
+  transition: box-shadow 0.3s var(--ease-snap);
 }
 .brief-btn:hover {
   box-shadow: 0 10px 24px -12px color-mix(in oklab, var(--accent) 80%, transparent);
@@ -3984,22 +3984,18 @@ html.is-locked {
   .brief-btn {
     display: none;
   }
+  /* In the phone menu the brief is the one solid button, set apart below the links. */
   .nav-brief {
     display: block;
-    margin-top: 8px;
+    margin-top: 40px;
   }
   .nav .nav-brief a {
     gap: 10px;
     justify-content: center;
-    height: 50px;
-    border-bottom: 0;
-    border-radius: 999px;
+    height: 46px;
     background: var(--accent);
     color: var(--accent-ink);
-    font-family: var(--font-sans);
-    font-size: 17px;
     font-weight: 650;
-    letter-spacing: 0;
   }
   .nav .nav-brief a::after {
     display: none;

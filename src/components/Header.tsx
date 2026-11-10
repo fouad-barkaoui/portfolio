@@ -1,4 +1,4 @@
-import { Moon, Sun, FilePenLine } from 'lucide-react';
+import { FilePenLine, Menu, Moon, Sun, X } from 'lucide-react';
 import { useEffect, useState, type CSSProperties, type MouseEvent } from 'react';
 import { briefUi } from '@/content/brief';
 import { ui } from '@/content/content';
@@ -24,7 +24,7 @@ export function Header(): JSX.Element {
   const [scrolled, setScrolled] = useState(false);
   const [active, setActive] = useState<string | null>(null);
 
-  // Header glass once the page moves, and which section is under the header.
+  // The bar condenses once the page moves; also tracks the section under it.
   useEffect(() => {
     let frame = 0;
     const update = (): void => {
@@ -59,8 +59,17 @@ export function Header(): JSX.Element {
     const onKey = (e: KeyboardEvent): void => {
       if (e.key === 'Escape') setOpen(false);
     };
+    // The full-screen menu only exists on narrow screens (see index.css).
+    const wide = window.matchMedia('(min-width: 861px)');
+    const onWide = (): void => {
+      if (wide.matches) setOpen(false);
+    };
     window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
+    wide.addEventListener('change', onWide);
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      wide.removeEventListener('change', onWide);
+    };
   }, [open]);
 
   const go = (id: string) => (e: MouseEvent<HTMLAnchorElement>) => {
@@ -71,11 +80,11 @@ export function Header(): JSX.Element {
 
   return (
     <>
-    <div className="nav-overlay" data-open={open || undefined} onClick={() => setOpen(false)} aria-hidden />
+    <div className="nav-overlay" data-open={open || undefined} aria-hidden />
     <header className="site-header" data-scrolled={scrolled || undefined} data-open={open || undefined}>
       <div className="site-header-inner">
         <a href="#top" className="brand" onClick={go('top')} aria-label={t(ui.home)}>
-          <Logo size={36} />
+          <Logo size={32} />
         </a>
 
         <nav className="nav" aria-label={lang === 'ar' ? 'التنقّل الرئيسي' : 'Main'}>
@@ -107,17 +116,6 @@ export function Header(): JSX.Element {
         </nav>
 
         <div className="header-tools">
-          <a
-            href="#brief"
-            className="brief-btn"
-            onClick={(e) => {
-              e.preventDefault();
-              openBrief();
-            }}
-          >
-            <FilePenLine size={15} strokeWidth={2} aria-hidden />
-            {t(briefUi.menu)}
-          </a>
           <button type="button" className="lang-btn" onClick={toggleLang} title={t(ui.langSwitchAria)}>
             <span lang={lang === 'en' ? 'ar' : 'en'}>{t(ui.langSwitch)}</span>
             <span className="sr-only">: {t(ui.langSwitchAria)}</span>
@@ -131,6 +129,17 @@ export function Header(): JSX.Element {
           >
             {theme === 'dark' ? <Sun size={16} strokeWidth={1.8} aria-hidden /> : <Moon size={16} strokeWidth={1.8} aria-hidden />}
           </button>
+          <a
+            href="#brief"
+            className="brief-btn"
+            onClick={(e) => {
+              e.preventDefault();
+              openBrief();
+            }}
+          >
+            <FilePenLine size={15} strokeWidth={2} aria-hidden />
+            {t(briefUi.menu)}
+          </a>
           <button
             type="button"
             className="icon-btn menu-btn"
@@ -139,10 +148,7 @@ export function Header(): JSX.Element {
             aria-label={open ? t(ui.close) : t(ui.menu)}
             onClick={() => setOpen((o) => !o)}
           >
-            <span className="burger" aria-hidden>
-              <i />
-              <i />
-            </span>
+            {open ? <X size={18} strokeWidth={2} aria-hidden /> : <Menu size={18} strokeWidth={2} aria-hidden />}
           </button>
         </div>
       </div>
