@@ -1262,6 +1262,61 @@ img {
   font-weight: 600;
 }
 
+/* Opening reveal — a lens with a chromatic rim rises from below the fold and
+   opens until it uncovers the whole screen (after styles.refero.design).
+   Pure CSS on a static element outside #root, so it plays on the prerendered
+   page before React hydrates. Shown only with html.intro (JS on, motion
+   allowed) and only where CSS hypot() exists; otherwise it never paints. */
+.welcome {
+  display: none;
+}
+@supports (width: hypot(1px, 1px)) {
+  .intro .welcome {
+    /* Dark: white hole + black edge, multiplied over the page. */
+    --reveal-center: #fff;
+    --reveal-edge: #000;
+    --reveal-colors: #f384ff 5.92%, #f40 6.92%, #e4f222 7.92%, #e1e1fe 8.92%, #0af 9.92%, #00166d 12.07%;
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    pointer-events: none;
+    mix-blend-mode: multiply;
+    background-color: var(--reveal-edge);
+    background-image: radial-gradient(
+      circle closest-side at 50% 50%,
+      var(--reveal-center) 0%,
+      var(--reveal-center) 4.59%,
+      var(--reveal-colors),
+      var(--reveal-edge) 14.25%,
+      var(--reveal-edge) 100%
+    );
+    background-repeat: no-repeat;
+    animation: welcome-reveal 2s -0.25s linear both;
+  }
+  /* Light: black hole + white edge, screened over the page. */
+  :root[data-theme='light'].intro .welcome {
+    --reveal-center: #000;
+    --reveal-edge: #fff;
+    --reveal-colors: #00166d 6.77%, #0af 8.92%, #e1e1fe 9.92%, #e4f222 10.92%, #f40 11.92%, #f384ff 12.92%;
+    mix-blend-mode: screen;
+  }
+}
+/* Starts as a small lens below the viewport; ends with the hole's radius equal
+   to half the screen diagonal (4.59% × 21.7865 ≈ 1), so the last frame is the
+   page itself, then the layer hides. */
+@keyframes welcome-reveal {
+  from {
+    background-position: 50% calc(50% + 50vh + 20vmax);
+    background-size: 200vmax 200vmax;
+  }
+  to {
+    visibility: hidden;
+    background-position: 50% 50%;
+    background-size: calc(43.573px + 21.7865 * hypot(100vw, 100vh)) calc(43.573px + 21.7865 * hypot(100vw, 100vh));
+  }
+}
+
 /* Intro — runs once, only when html.intro is set (motion allowed). */
 .intro [data-intro='guide'] {
   animation: draw-x 1.1s cubic-bezier(0.65, 0, 0.35, 1) both;
